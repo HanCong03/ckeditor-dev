@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KityFormula公式编辑器</title>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+
+    <link rel="stylesheet" href="assets/styles/page.css">
+    <link rel="stylesheet" href="assets/styles/base.css">
+    <link rel="stylesheet" href="assets/styles/ui.css">
+    <link rel="stylesheet" href="assets/styles/scrollbar.css">
+
+    <script src="../lib/jquery-1.11.0.min.js"></script>
+    <script src="../lib/kitygraph.all.js"></script>
+    <script src="../lib/kity-formula-render.all.js"></script>
+    <script src="../lib/kity-formula-parser.all.js"></script>
+    <script src="../lib/kityformula-editor.all.min.js"></script>
+    <script>
+        jQuery( function ($) {
+
+            var factory = kf.EditorFactory.create( $( "#eidotr" )[ 0 ], {
+                render: {
+                    fontsize: 40
+                },
+                resource: {
+                    path: "http://hancong03.github.io/ckeditor-dev/plugins/formula/resource/"
+                }
+            } );
+
+            factory.ready( function ( KFEditor ) {
+
+                // this指向KFEditor
+
+                this.execCommand( "render", "\\placeholder" );
+                this.execCommand( "focus" );
+
+                window.parent.kfEditor = this;
+
+            } );
+
+        } );
+    </script>
+</head>
+<body>
+    <div id="eidotr" class="kf-editor" style="width: 780px; height: 500px;"></div>
+</body>
+</html>
