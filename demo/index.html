@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>公式插件</title>
+    <script src="../ckeditor.js"></script>
+    <style>
+        .kity-formula-dialog .cke_dialog_contents_body {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .kity-formula-dialog .cke_dialog_contents_body td {
+            padding: 0;
+        }
+
+    </style>
+</head>
+<body>
+<textarea cols="80" id="editor1" name="editor1" rows="10">
+</textarea>
+<script>
+    CKEDITOR.replace( 'editor1', {
+        extraPlugins: 'formula',
+        toolbar: [
+            [ 'Formula']
+        ]
+    });
+</script>
+</body>
+</html>
