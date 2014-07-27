@@ -62,14 +62,6 @@
                             type: 'html',
                             html: '<div style="width: 780px; height: 500px;"><iframe style="width: 100%;height: 100%;" frameborder="0" src="../plugins/formula/page/index.html"></iframe></div>'
                         } ]
-                    },
-					{
-                        id: 'latexEdit',
-                        label: 'LaTeX编辑',
-                        elements: [ {
-                            type: 'html',
-                            html: '<div id="formula"></div>'
-                        } ]
                     }
 				]
         };
