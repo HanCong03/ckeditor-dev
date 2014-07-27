@@ -49,7 +49,7 @@
                 onCancel: function () {
 
                     if ( window.kfEditor ) {
-                        kfEditor.execCommand( "render", "\\placeholder" );
+                        kfEditor.execCommand( "reset" );
                     }
 
                 },
