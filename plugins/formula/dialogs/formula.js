@@ -18,6 +18,8 @@
 
             editor.insertElement( ele );
 
+            kfEditor.execCommand( "reset" );
+
         }
 
         return {
