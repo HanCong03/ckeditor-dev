@@ -30,7 +30,7 @@
                 ele.addClass( "kf-formula-expression" );
                 ele.setAttribute( "contenteditable", "false" );
                 ele.setAttribute( "frameborder", "0" );
-                ele.setAttribute( "style", "vertical-align: middle;" );
+                ele.setAttribute( "style", "vertical-align: middle; width: 100px; height: 18px;" );
                 ele.setAttribute( "data-source", source );
                 ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
                 editor.insertElement( ele );
