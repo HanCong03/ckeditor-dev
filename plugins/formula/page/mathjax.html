@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mathjax Render Page</title>
+    <meta charset="UTF-8">
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            display: inline;
+            overflow: hidden;
+        }
+    </style>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+      });
+      MathJax.Hub.Register.MessageHook("End Process", function (message) {
+        if ( top.KF_RESIZE_HANDLER ) {
+            var formula = document.getElementById( "formula" );
+            top.KF_RESIZE_HANDLER( formula.scrollWidth, formula.scrollHeight );
+        }
+      })
+
+    </script>
+    <script src="./mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script>
+</head>
+<body>
+    <script>
+
+        var source = decodeURIComponent( location.search );
+
+        if ( source.charAt( 0 ) === '?' ) {
+            source = source.substring( 1 );
+        }
+
+        if ( source ) {
+            document.write( '<span id="formula" style="display: inline-block;">$' + source + '$</span>' );
+        }
+
+        document.onclick = function () {
+            if ( top.KF_EDITOR ) {
+                var frameElement = document.defaultView.frameElement;
+                top.KF_EDITOR.setRebuild( frameElement.getAttribute( "data-source" ), frameElement );
+                top.KF_EDITOR.getParentEditor().execCommand( "insertformula" );
+            }
+        };
+
+    </script>
+</body>
+</html>

@@ -5,20 +5,54 @@
 
 ( function() {
 
-    var pluginName = 'formula';
+    var pluginName = 'formula',
+        rebuildSource = null,
+        handler = null,
+        rebuildFrame = null,
+        lastFormulaEle = null,
+        lastFormulaFrame = null;
 
 	var formulaDialog = function( editor, dialogType ) {
 
         var inited = false;
 
-        function insertFormula ( info ) {
+        function insertFormula ( dialog, source ) {
 
-            var ele = editor.document.createElement( 'img' );
-            ele.setAttribute( 'src', info.img );
+            var ele = null;
 
-            editor.insertElement( ele );
+            if ( rebuildSource !== null ) {
+                ele = rebuildFrame;
+                ele.setAttribute( "data-source", source );
+                ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
+                lastFormulaFrame = ele;
+            } else {
+                ele = editor.document.createElement( 'iframe' );
+                ele.addClass( "kf-formula-expression" );
+                ele.setAttribute( "contenteditable", "false" );
+                ele.setAttribute( "frameborder", "0" );
+                ele.setAttribute( "style", "vertical-align: middle;" );
+                ele.setAttribute( "data-source", source );
+                ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
+                editor.insertElement( ele );
+                lastFormulaFrame = ele.$;
+            }
 
             kfEditor.execCommand( "reset" );
+
+        }
+
+        // return Mathjax page URL
+        function getMathjaxPath ( dialog, source ) {
+
+            var url = dialog.getElement().find("iframe").getItem(0).$.src;
+
+            url = url.split( "#" )[0];
+            url = url.split( "?" )[0];
+            url = url.split( "/" );
+
+            url.length -= 1;
+
+            return encodeURI( url.join( "/" ) + "/mathjax.html?" + source );
 
         }
 
@@ -31,18 +65,48 @@
 
                     if ( !inited ) {
                         inited = true;
+                        //iframe resize handler
+                        top.KF_RESIZE_HANDLER = function ( width, height ) {
+                            if ( lastFormulaFrame ) {
+                                lastFormulaFrame.style.width = width + 'px';
+                                lastFormulaFrame.style.height = height + 'px';
+                            }
+                        };
+                        // 注册引用, 获取ckeditor
+                        top.KF_EDITOR = {
+                            getParentEditor: function () {
+                                return editor;
+                            },
+                            setRebuild: function ( source, frame ) {
+                                rebuildSource = source;
+                                rebuildFrame = frame;
+                            },
+                            getRebuild: function () {
+                                return rebuildSource;
+                            },
+                            clearRebuild: function () {
+                                rebuildSource = null;
+                                rebuildFrame = null;
+                            },
+                            setOpenHandler: function ( openHandler ) {
+                                handler = openHandler;
+                            }
+                        };
+
                         this.getElement().addClass( "kity-formula-dialog" );
-                    } else if ( window.kfEditor ) {
-//                        window.setTimeout( function () {
-//                            kfEditor.execCommand( "focus" );
-//                        }, 1000 );
+
+                    }
+
+                    if ( handler && rebuildSource ) {
+                        handler( rebuildSource );
                     }
 
 				},
 				onOk: function() {
 
                     if ( window.kfEditor ) {
-                        kfEditor.execCommand( "get.image.data", insertFormula );
+                        insertFormula( this, kfEditor.execCommand( "get.source" ) );
+                        kfEditor.execCommand( "reset" );
                     }
 
 				},
@@ -52,6 +116,9 @@
                         kfEditor.execCommand( "reset" );
                     }
 
+                },
+                onHide: function () {
+                    top.KF_EDITOR.clearRebuild();
                 },
 				contents: [
 					{

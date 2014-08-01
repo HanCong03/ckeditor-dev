@@ -31,11 +31,32 @@
             factory.ready( function ( KFEditor ) {
 
                 // this指向KFEditor
+                var source = "\\placeholder";
 
-                this.execCommand( "render", "\\placeholder" );
+                if ( top.KF_EDITOR.getRebuild ) {
+
+                    var rebuildSource = top.KF_EDITOR.getRebuild();
+
+                    if ( rebuildSource ) {
+                        source = rebuildSource;
+                    }
+
+                }
+
+                this.execCommand( "render", source );
                 this.execCommand( "focus" );
 
-                window.parent.kfEditor = this;
+                top.kfEditor = this;
+
+                // 设置打开dialog时设置公式的句柄
+                top.KF_EDITOR.setOpenHandler( function ( source ) {
+
+                    KFEditor.execCommand( "render", source );
+                    window.setTimeout( function () {
+//                        KFEditor.execCommand( "focus" );
+                    }, 0 );
+
+                } );
 
             } );
 

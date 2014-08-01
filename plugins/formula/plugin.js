@@ -24,12 +24,12 @@
 //                allowed = 'img[alt,dir,id,lang,longdesc,!src,title]{*}(*)';
 
             // Register the command.
-            editor.addCommand( pluginName, new CKEDITOR.dialogCommand( pluginName ) );
+            editor.addCommand( commandName, new CKEDITOR.dialogCommand( pluginName ) );
 
             // Register the toolbar button.
             editor.ui.addButton && editor.ui.addButton( 'Formula', {
                 label: '公式',
-                command: pluginName,
+                command: commandName,
                 toolbar: 'insert'
             } );
 
