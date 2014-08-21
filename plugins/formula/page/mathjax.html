@@ -13,14 +13,23 @@
     </style>
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+        tex2jax: {
+            inlineMath: [["\\(","\\)"]]},
+            messageStyle: "none",
+            menuSettings: {
+            zoom: "null",
+            mpContext: true,
+            mpMouse: true
+          }
       });
       MathJax.Hub.Register.MessageHook("End Process", function (message) {
+        document.getElementById( "loadingIcon" ).style.display = "none";
+        document.getElementById( "formula" ).style.display = "inline-block";
         if ( top.KF_RESIZE_HANDLER ) {
             var formula = document.getElementById( "formula" );
             top.KF_RESIZE_HANDLER( formula.scrollWidth, formula.scrollHeight );
         }
-      })
+      });
 
     </script>
     <script src="./mathjax/MathJax.js?config=TeX-AMS_HTML-full"></script>
@@ -35,10 +44,10 @@
         }
 
         if ( source ) {
-            document.write( '<span id="formula" style="display: inline-block;">$' + source + '$</span>' );
+            document.write( '<span id="formula" style="display: none;">\\(' + source + '\\)</span>' );
         }
 
-        document.onclick = function () {
+        document.ondblclick = function () {
             if ( top.KF_EDITOR ) {
                 var frameElement = document.defaultView.frameElement;
                 top.KF_EDITOR.setRebuild( frameElement.getAttribute( "data-source" ), frameElement );
@@ -47,5 +56,6 @@
         };
 
     </script>
+    <img id="loadingIcon" src="../page/assets/images/loader.gif">
 </body>
 </html>
