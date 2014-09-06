@@ -19,13 +19,27 @@
 <body>
 <textarea cols="80" id="editor1" name="editor1" rows="10">
 </textarea>
+<textarea cols="80" id="editor2" name="editor1" rows="10">
+</textarea>
 <script>
-    CKEDITOR.replace( 'editor1', {
+    var editor = CKEDITOR.replace( 'editor1', {
         extraPlugins: 'formula',
         toolbar: [
             [ 'Formula']
         ]
     });
+
+    editor.on( "instanceReady", function () {
+        editor.insertHtml( '<iframe class="kf-formula-expression" contenteditable="false" frameborder="0" style="vertical-align: middle; width: 100px; height: 18px;" data-source="asdf" src="http://localhost/ckeditor-dev/plugins/formula/page/mathjax.html?asdf"></iframe>', 'unfiltered_html' );
+    } );
+
+    CKEDITOR.replace( 'editor2', {
+        extraPlugins: 'formula',
+        toolbar: [
+            [ 'Formula']
+        ]
+    });
+
 </script>
 </body>
 </html>

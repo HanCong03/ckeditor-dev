@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Render - v1.0.0 - 2014-08-07
+ * Kity Formula Render - v1.0.0 - 2014-09-04
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -3651,6 +3651,9 @@ _p[14] = {
                 this.setFlag("Fraction");
                 this.setOperator(new FractionOperator());
             },
+            setZoom: function(zoom) {
+                return this.getOperator().setZoom(zoom);
+            },
             /*------- 重写分数结构的baseline和mealine计算方式 */
             getBaseline: function(refer) {
                 var downOperand = this.getOperand(1), rectBox = downOperand.getRenderBox(refer);
@@ -5278,11 +5281,15 @@ _p[40] = {
         return kity.createClass("FractionOperator", {
             base: _p.r(43),
             constructor: function() {
+                this.zoom = ZOOM;
                 this.callBase("Fraction");
             },
+            setZoom: function(zoom) {
+                this.zoom = zoom;
+            },
             applyOperand: function(upOperand, downOperand) {
-                upOperand.scale(ZOOM);
-                downOperand.scale(ZOOM);
+                upOperand.scale(this.zoom);
+                downOperand.scale(this.zoom);
                 var upWidth = Math.ceil(upOperand.getWidth()), downWidth = Math.ceil(downOperand.getWidth()), upHeight = Math.ceil(upOperand.getHeight()), downHeight = Math.ceil(downOperand.getHeight()), // 分数线overflow值
                 overflow = 3, // 整体padding
                 padding = 1, maxWidth = Math.max(upWidth, downWidth), maxHeight = Math.max(upHeight, downHeight), operatorShape = generateOperator(maxWidth, overflow);

@@ -47,12 +47,10 @@
             document.write( '<span id="formula" style="display: none;">\\(' + source + '\\)</span>' );
         }
 
-        document.ondblclick = function () {
-            if ( top.KF_EDITOR ) {
-                var frameElement = document.defaultView.frameElement;
-                top.KF_EDITOR.setRebuild( frameElement.getAttribute( "data-source" ), frameElement );
-                top.KF_EDITOR.getParentEditor().execCommand( "insertformula" );
-            }
+        document.ondblclick = function ( e ) {
+            e.preventDefault();
+            var frameElement = document.defaultView.frameElement;
+            frameElement.ownerDocument.reopenFormula( frameElement.getAttribute( "data-source" ), frameElement );
         };
 
     </script>

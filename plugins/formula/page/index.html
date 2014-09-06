@@ -23,43 +23,34 @@
         jQuery( function ($) {
 
             var factory = kf.EditorFactory.create( $( "#eidotr" )[ 0 ], {
-                render: {
-                    fontsize: 40
-                },
-                resource: {
-                    path: "../resource/"
-                }
-            } );
-
-            factory.ready( function ( KFEditor ) {
-
-                // this指向KFEditor
-                var source = "\\placeholder";
-
-                if ( top.KF_EDITOR.getRebuild ) {
-
-                    var rebuildSource = top.KF_EDITOR.getRebuild();
-
-                    if ( rebuildSource ) {
-                        source = rebuildSource;
+                    render: {
+                        fontsize: 40
+                    },
+                    resource: {
+                        path: "../resource/"
                     }
+                }),
+                uniqueId = location.hash.substring( 1 );
 
+            factory.ready( function () {
+
+                var source = location.search;
+
+                if ( source ) {
+                    source = source.substring( 1 );
+                } else {
+                    source = "\\placeholder";
+                }
+
+                if ( !top.KF_EDITOR[uniqueId] ) {
+                    return false;
                 }
 
                 this.execCommand( "render", source );
                 this.execCommand( "focus" );
 
-                top.kfEditor = this;
-
                 // 设置打开dialog时设置公式的句柄
-                top.KF_EDITOR.setOpenHandler( function ( source ) {
-
-                    KFEditor.execCommand( "render", source );
-                    window.setTimeout( function () {
-//                        KFEditor.execCommand( "focus" );
-                    }, 0 );
-
-                } );
+                top.KF_EDITOR[ uniqueId ].setFormulaEditor( this );
 
             } );
 

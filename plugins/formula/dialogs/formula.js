@@ -5,26 +5,22 @@
 
 ( function() {
 
-    var pluginName = 'formula',
-        rebuildSource = null,
-        handler = null,
-        rebuildFrame = null,
-        lastFormulaEle = null,
-        lastFormulaFrame = null;
+    var pluginName = 'formula';
 
-	var formulaDialog = function( editor, dialogType ) {
+	var formulaDialog = function( editor, uniqueId ) {
 
-        var inited = false;
+        var inited = false,
+            formulaEditor = null,
+            dialog = this;
 
         function insertFormula ( dialog, source ) {
 
             var ele = null;
 
-            if ( rebuildSource !== null ) {
-                ele = rebuildFrame;
+            if ( window.TMP_KF_SOURCE ) {
+                ele = window.TMP_KF_FRAME;
                 ele.setAttribute( "data-source", source );
                 ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
-                lastFormulaFrame = ele;
             } else {
                 ele = editor.document.createElement( 'iframe' );
                 ele.addClass( "kf-formula-expression" );
@@ -32,12 +28,11 @@
                 ele.setAttribute( "frameborder", "0" );
                 ele.setAttribute( "style", "vertical-align: middle; width: 100px; height: 18px;" );
                 ele.setAttribute( "data-source", source );
+                window.TMP_KF_SOURCE = source;
+                console.log( getMathjaxPath( dialog, source ) )
                 ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
-                editor.insertElement( ele );
-                lastFormulaFrame = ele.$;
+                editor.insertHtml( ele.$.outerHTML, "unfiltered_html" );
             }
-
-            kfEditor.execCommand( "reset" );
 
         }
 
@@ -63,62 +58,48 @@
                 resizable: CKEDITOR.DIALOG_RESIZE_NONE,
 				onShow: function() {
 
+                    if ( !top.KF_EDITOR ) {
+                        top.KF_EDITOR = [];
+                    }
+
                     if ( !inited ) {
                         inited = true;
-                        //iframe resize handler
-                        top.KF_RESIZE_HANDLER = function ( width, height ) {
-                            if ( lastFormulaFrame ) {
-                                lastFormulaFrame.style.width = width + 'px';
-                                lastFormulaFrame.style.height = height + 'px';
-                            }
-                        };
                         // 注册引用, 获取ckeditor
-                        top.KF_EDITOR = {
-                            getParentEditor: function () {
-                                return editor;
-                            },
-                            setRebuild: function ( source, frame ) {
-                                rebuildSource = source;
-                                rebuildFrame = frame;
-                            },
-                            getRebuild: function () {
-                                return rebuildSource;
-                            },
-                            clearRebuild: function () {
-                                rebuildSource = null;
-                                rebuildFrame = null;
-                            },
-                            setOpenHandler: function ( openHandler ) {
-                                handler = openHandler;
+                        top.KF_EDITOR[ uniqueId ] = {
+                            setFormulaEditor: function ( editor ) {
+                                formulaEditor = editor;
                             }
                         };
 
                         this.getElement().addClass( "kity-formula-dialog" );
 
-                    }
+                    } else {
 
-                    if ( handler && rebuildSource ) {
-                        handler( rebuildSource );
+                        if ( !formulaEditor ) {
+                            return ;
+                        }
+
+                        if ( window.TMP_KF_SOURCE ) {
+                            formulaEditor.execCommand( "render", window.TMP_KF_SOURCE );
+                        }
+
                     }
 
 				},
 				onOk: function() {
 
-                    if ( window.kfEditor ) {
-                        insertFormula( this, kfEditor.execCommand( "get.source" ) );
-                        kfEditor.execCommand( "reset" );
+                    if ( formulaEditor ) {
+                        insertFormula( this, formulaEditor.execCommand( "get.source" ) );
+                        formulaEditor.execCommand( "reset" );
                     }
 
 				},
-                onCancel: function () {
-
-                    if ( window.kfEditor ) {
-                        kfEditor.execCommand( "reset" );
-                    }
-
-                },
                 onHide: function () {
-                    top.KF_EDITOR.clearRebuild();
+                    window.TMP_KF_SOURCE = null;
+                    window.TMP_KF_FRAME = null;
+                    if ( formulaEditor ) {
+                        formulaEditor.execCommand( "reset" );
+                    }
                 },
 				contents: [
 					{
@@ -127,7 +108,7 @@
                         accessKey: 'F',
                         elements: [ {
                             type: 'html',
-                            html: '<div style="width: 780px; height: 500px;"><iframe style="width: 100%;height: 100%;" frameborder="0" src="../plugins/formula/page/index.html"></iframe></div>'
+                            html: '<div style="width: 780px; height: 500px;"><iframe style="width: 100%;height: 100%;" frameborder="0" src="' + getHTML( '../plugins/formula/page/index.html', uniqueId ) +'"></iframe></div>'
                         } ]
                     }
 				]
@@ -135,8 +116,15 @@
 
     };
 
+    function getHTML ( url, uniqueId ) {
+
+        return url + ( window.TMP_KF_SOURCE ? '?' + encodeURI( window.TMP_KF_SOURCE ) : '' ) +'#'+ uniqueId;
+
+    }
+
+
 	CKEDITOR.dialog.add( pluginName, function( editor ) {
-		return formulaDialog( editor, pluginName );
+		return formulaDialog( editor, (+new Date() + "" + Math.random()).replace( ".", "" ) );
 	} );
 
 } )();
