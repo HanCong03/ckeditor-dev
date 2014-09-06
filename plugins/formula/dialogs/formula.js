@@ -29,7 +29,6 @@
                 ele.setAttribute( "style", "vertical-align: middle; width: 100px; height: 18px;" );
                 ele.setAttribute( "data-source", source );
                 window.TMP_KF_SOURCE = source;
-                console.log( getMathjaxPath( dialog, source ) )
                 ele.setAttribute( "src", getMathjaxPath( dialog, source ) );
                 editor.insertHtml( ele.$.outerHTML, "unfiltered_html" );
             }
@@ -81,7 +80,12 @@
 
                         if ( window.TMP_KF_SOURCE ) {
                             formulaEditor.execCommand( "render", window.TMP_KF_SOURCE );
+                            window.tt = formulaEditor;
                         }
+
+                        window.setTimeout( function () {
+                            formulaEditor.execCommand( "focus" );
+                        }, 0 );
 
                     }
 

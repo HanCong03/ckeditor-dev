@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-09-04
+ * Kity Formula Editor - v1.0.0 - 2014-09-07
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -339,16 +339,23 @@ _p[7] = {
                 var rootInfo = null;
                 this.inputBox.focus();
                 // 如果当前不包含光标信息， 则手动设置光标信息， 以使得当前根节点被全选中
-                if (!this.kfEditor.requestService("syntax.has.cursor.info")) {
-                    rootInfo = this.kfEditor.requestService("syntax.get.root.group.info");
-                    this.kfEditor.requestService("syntax.update.record.cursor", {
-                        groupId: rootInfo.id,
-                        startOffset: 0,
-                        endOffset: rootInfo.content.length
-                    });
-                    this.kfEditor.requestService("control.update.input");
-                }
+                //            if ( !this.kfEditor.requestService( "syntax.has.cursor.info" ) ) {
+                rootInfo = this.kfEditor.requestService("syntax.get.root.group.info");
+                this.kfEditor.requestService("syntax.update.record.cursor", {
+                    groupId: rootInfo.id,
+                    startOffset: 0,
+                    endOffset: rootInfo.content.length
+                });
+                this.kfEditor.requestService("control.update.input");
+                //            } else {
+                //
+                //                var t = this.kfEditor.requestService( "syntax.get.record.cursor" );
+                //
+                //                alert(t.groupId + " ; " + t.startOffset + " ; " + t.endOffset );
+                //
+                //            }
                 this.kfEditor.requestService("control.reselect");
+                this.kfEditor.requestService("ui.toolbar.enable");
             },
             getSource: function() {
                 return this.latexInput.value.replace(/\\placeholder/g, "");
