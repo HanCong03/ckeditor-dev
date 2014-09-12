@@ -57,6 +57,8 @@
                 resizable: CKEDITOR.DIALOG_RESIZE_NONE,
 				onShow: function() {
 
+                    var dialog = this;
+
                     if ( !top.KF_EDITOR ) {
                         top.KF_EDITOR = [];
                     }
@@ -67,6 +69,19 @@
                         top.KF_EDITOR[ uniqueId ] = {
                             setFormulaEditor: function ( editor ) {
                                 formulaEditor = editor;
+                                editor.execCommand( "resize.notify", function ( val ) {
+
+                                    if ( !editor._ck_lastHeight ) {
+                                        editor._ck_lastHeight = 500;
+                                    }
+
+                                    editor._ck_lastHeight += val;
+
+                                    dialog.resize( 780, editor._ck_lastHeight );
+
+                                    dialog.getElement().findOne( ".kf-ck-container" ).setSize( 'height', editor._ck_lastHeight );
+
+                                } );
                             }
                         };
 
@@ -112,7 +127,7 @@
                         accessKey: 'F',
                         elements: [ {
                             type: 'html',
-                            html: '<div style="width: 780px; height: 500px;"><iframe style="width: 100%;height: 100%;" frameborder="0" src="' + getHTML( '../plugins/formula/page/index.html', uniqueId ) +'"></iframe></div>'
+                            html: '<div class="kf-ck-container" style="width: 780px; height: 500px;"><iframe style="width: 100%;height: 100%;" frameborder="0" src="' + getHTML( '../plugins/formula/page/index.html', uniqueId ) +'"></iframe></div>'
                         } ]
                     }
 				]

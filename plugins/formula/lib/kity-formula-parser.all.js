@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Parser - v1.0.0 - 2014-09-04
+ * Kity Formula Parser - v1.0.0 - 2014-09-08
  * https://github.com/HanCong03/kityformula-editor
  * GitHub: https://github.com/kitygraph/kityformula-editor.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -412,7 +412,7 @@ _p[6] = {
  */
 _p[7] = {
     value: function(require) {
-        var scriptHandler = _p.r(24), TYPE = _p.r(11);
+        var scriptHandler = _p.r(28), TYPE = _p.r(11);
         return {
             "^": {
                 name: "superscript",
@@ -440,19 +440,19 @@ _p[7] = {
                 name: "radical",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(25)
+                handler: _p.r(29)
             },
             sum: {
                 name: "summation",
                 type: TYPE.FN,
                 traversal: "rtl",
-                handler: _p.r(26)
+                handler: _p.r(30)
             },
             "int": {
                 name: "integration",
                 type: TYPE.FN,
                 traversal: "rtl",
-                handler: _p.r(18)
+                handler: _p.r(19)
             },
             brackets: {
                 name: "brackets",
@@ -468,25 +468,67 @@ _p[7] = {
                 name: "mathcal",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(21)
+                handler: _p.r(22)
             },
             mathfrak: {
                 name: "mathfrak",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(22)
+                handler: _p.r(23)
             },
             mathbb: {
                 name: "mathbb",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(20)
+                handler: _p.r(21)
             },
             mathrm: {
                 name: "mathrm",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(23)
+                handler: _p.r(24)
+            },
+            hat: {
+                name: "hat",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(18)
+            },
+            vec: {
+                name: "vec",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(18)
+            },
+            widehat: {
+                name: "widehat",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(18)
+            },
+            textcircled: {
+                name: "textcircled",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(31)
+            },
+            prod: {
+                name: "product",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(27)
+            },
+            pmod: {
+                name: "pmod",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(26)
+            },
+            overline: {
+                name: "overline",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(25)
             }
         };
     }
@@ -499,9 +541,9 @@ _p[8] = {
     value: function(require) {
         return {
             // 积分预处理器
-            "int": _p.r(28),
+            "int": _p.r(33),
             // 引号预处理
-            quot: _p.r(29)
+            quot: _p.r(34)
         };
     }
 };
@@ -512,22 +554,27 @@ _p[8] = {
 _p[9] = {
     value: function(require) {
         return {
-            combination: _p.r(32),
-            fraction: _p.r(33),
-            dfraction: _p.r(33),
-            "function": _p.r(34),
-            integration: _p.r(35),
-            subscript: _p.r(42),
-            superscript: _p.r(44),
-            script: _p.r(40),
-            radical: _p.r(41),
-            summation: _p.r(43),
-            brackets: _p.r(30),
-            mathcal: _p.r(37),
-            mathfrak: _p.r(38),
-            mathbb: _p.r(36),
-            mathrm: _p.r(39),
-            cases: _p.r(31)
+            combination: _p.r(37),
+            fraction: _p.r(38),
+            dfraction: _p.r(38),
+            "function": _p.r(39),
+            integration: _p.r(41),
+            subscript: _p.r(51),
+            superscript: _p.r(53),
+            script: _p.r(49),
+            radical: _p.r(50),
+            summation: _p.r(52),
+            product: _p.r(48),
+            brackets: _p.r(35),
+            mathcal: _p.r(43),
+            mathfrak: _p.r(44),
+            mathbb: _p.r(42),
+            mathrm: _p.r(45),
+            cases: _p.r(36),
+            textcircled: _p.r(54),
+            hat: _p.r(40),
+            pmod: _p.r(47),
+            overline: _p.r(46)
         };
     }
 };
@@ -677,7 +724,7 @@ _p[16] = {
  */
 _p[17] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(19);
+        var ScriptExtractor = _p.r(20);
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
             var params = ScriptExtractor.exec(unprocessedStack);
@@ -693,11 +740,30 @@ _p[17] = {
 };
 
 /*!
- * 积分函数处理器
+ * 分数函数处理器
  */
 _p[18] = {
+    value: function() {
+        // 处理函数接口
+        return function(info, processedStack, unprocessedStack) {
+            var expr = unprocessedStack.shift(), type = info.name;
+            info.name = "hat";
+            info.operand = [ expr ];
+            info.callFn = {
+                setType: [ type ]
+            };
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
+/*!
+ * 积分函数处理器
+ */
+_p[19] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(19), FN_TYPE = _p.r(11).FN;
+        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
         return function(info, processedStack, unprocessedStack) {
             var count = unprocessedStack.shift(), params = ScriptExtractor.exec(unprocessedStack);
             if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
@@ -717,7 +783,7 @@ _p[18] = {
 /*!
  * 通用上下标提取器
  */
-_p[19] = {
+_p[20] = {
     value: function() {
         return {
             exec: function(stack) {
@@ -769,7 +835,7 @@ _p[19] = {
 /*!
  * 双线处理
  */
-_p[20] = {
+_p[21] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -793,7 +859,7 @@ _p[20] = {
 /*!
  * 手写体处理
  */
-_p[21] = {
+_p[22] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -817,7 +883,7 @@ _p[21] = {
 /*!
  * 花体处理
  */
-_p[22] = {
+_p[23] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -841,7 +907,7 @@ _p[22] = {
 /*!
  * 罗马处理
  */
-_p[23] = {
+_p[24] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -863,9 +929,55 @@ _p[23] = {
 };
 
 /*!
+ * overline 上划线
+ */
+_p[25] = {
+    value: function() {
+        return function(info, processedStack, unprocessedStack) {
+            var expr = unprocessedStack.shift();
+            info.operand = [ expr ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
+/*!
+ * pmod
+ */
+_p[26] = {
+    value: function() {
+        return function(info, processedStack, unprocessedStack) {
+            var expr = unprocessedStack.shift();
+            info.operand = [ expr ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
+/*!
+ * 连乘函数处理器
+ */
+_p[27] = {
+    value: function(require) {
+        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
+        return function(info, processedStack, unprocessedStack) {
+            var params = ScriptExtractor.exec(unprocessedStack);
+            if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
+                params.expr = params.expr.handler(params.expr, processedStack, [ unprocessedStack.shift() ]);
+            }
+            info.operand = [ params.expr, params.superscript, params.subscript ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
+/*!
  * 上下标操作符函数处理
  */
-_p[24] = {
+_p[28] = {
     value: function() {
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
@@ -899,7 +1011,7 @@ _p[24] = {
 /*!
  * 方根函数处理器
  */
-_p[25] = {
+_p[29] = {
     value: function(require) {
         var mergeHandler = _p.r(14);
         // 处理函数接口
@@ -934,9 +1046,9 @@ _p[25] = {
 /*!
  * 求和函数处理器
  */
-_p[26] = {
+_p[30] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(19), FN_TYPE = _p.r(11).FN;
+        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
         return function(info, processedStack, unprocessedStack) {
             var params = ScriptExtractor.exec(unprocessedStack);
             if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
@@ -949,13 +1061,30 @@ _p[26] = {
     }
 };
 
+/*!
+ * 带圈的数字
+ */
+_p[31] = {
+    value: function() {
+        return function(info, processedStack, unprocessedStack) {
+            var char = unprocessedStack.shift();
+            if (typeof char === "object" && char.name === "combination") {
+                char = char.operand.join("");
+            }
+            info.operand = [ char ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
 /**
  * Kity Formula Latex解析器实现
  */
 /* jshint forin: false */
-_p[27] = {
+_p[32] = {
     value: function(require) {
-        var Parser = _p.r(46).Parser, LatexUtils = _p.r(1), PRE_HANDLER = _p.r(8), serialization = _p.r(45), OP_DEFINE = _p.r(7), REVERSE_DEFINE = _p.r(9), SPECIAL_LIST = _p.r(10), Utils = _p.r(4);
+        var Parser = _p.r(56).Parser, LatexUtils = _p.r(1), PRE_HANDLER = _p.r(8), serialization = _p.r(55), OP_DEFINE = _p.r(7), REVERSE_DEFINE = _p.r(9), SPECIAL_LIST = _p.r(10), Utils = _p.r(4);
         // data
         var leftChar = "￸", rightChar = "￼", splitChar = "﻿", clearCharPattern = new RegExp(leftChar + "|" + rightChar, "g"), leftCharPattern = new RegExp(leftChar, "g"), rightCharPattern = new RegExp(rightChar, "g");
         Parser.register("latex", Parser.implement({
@@ -1213,7 +1342,7 @@ _p[27] = {
 /**
  * “开方”预处理器
  */
-_p[28] = {
+_p[33] = {
     value: function() {
         return function(input) {
             return input.replace(/\\(i+)nt(\b|[^a-zA-Z])/g, function(match, sign, suffix) {
@@ -1226,7 +1355,7 @@ _p[28] = {
 /**
  * “双引号”预处理器
  */
-_p[29] = {
+_p[34] = {
     value: function() {
         return function(input) {
             return input.replace(/``/g, "“");
@@ -1237,7 +1366,7 @@ _p[29] = {
 /*!
  * 逆解析处理函数: brackets
  */
-_p[30] = {
+_p[35] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1260,7 +1389,7 @@ _p[30] = {
 /*!
  * 逆解析处理函数: cases
  */
-_p[31] = {
+_p[36] = {
     value: function() {
         /**
      * operands
@@ -1282,7 +1411,7 @@ _p[31] = {
 /*!
  * 逆解析处理函数：combination
  */
-_p[32] = {
+_p[37] = {
     value: function() {
         return function(operands) {
             if (this.attr["data-root"] || this.attr["data-placeholder"]) {
@@ -1296,7 +1425,7 @@ _p[32] = {
 /*!
  * 逆解析处理函数: fraction
  */
-_p[33] = {
+_p[38] = {
     value: function() {
         return function(operands) {
             if (this.callFn) {
@@ -1311,7 +1440,7 @@ _p[33] = {
 /*!
  * 逆解析处理函数: func
  */
-_p[34] = {
+_p[39] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1338,9 +1467,21 @@ _p[34] = {
 };
 
 /*!
+ * 逆解析处理函数: textcircled
+ */
+_p[40] = {
+    value: function() {
+        return function(operands) {
+            var name = this.callFn.setType[0];
+            return "\\" + name + operands[0];
+        };
+    }
+};
+
+/*!
  * 逆解析处理函数: integration
  */
-_p[35] = {
+_p[41] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1376,7 +1517,7 @@ _p[35] = {
 /*!
  * 逆解析处理函数: mathbb
  */
-_p[36] = {
+_p[42] = {
     value: function() {
         return function(operands) {
             return "\\mathbb{" + operands[0] + "}";
@@ -1387,7 +1528,7 @@ _p[36] = {
 /*!
  * 逆解析处理函数: mathcal
  */
-_p[37] = {
+_p[43] = {
     value: function() {
         return function(operands) {
             return "\\mathcal{" + operands[0] + "}";
@@ -1398,7 +1539,7 @@ _p[37] = {
 /*!
  * 逆解析处理函数: mathfrak
  */
-_p[38] = {
+_p[44] = {
     value: function() {
         return function(operands) {
             return "\\mathfrak{" + operands[0] + "}";
@@ -1409,7 +1550,7 @@ _p[38] = {
 /*!
  * 逆解析处理函数: mathcal
  */
-_p[39] = {
+_p[45] = {
     value: function() {
         return function(operands) {
             return "\\mathrm{" + operands[0] + "}";
@@ -1418,9 +1559,67 @@ _p[39] = {
 };
 
 /*!
+ * 逆解析处理函数: overline
+ */
+_p[46] = {
+    value: function() {
+        return function(operands) {
+            operands = operands[0];
+            if (operands[0] === "{") {
+                return "\\overline" + operands;
+            }
+            return "\\overline{" + operands + "}";
+        };
+    }
+};
+
+/*!
+ * 逆解析处理函数: pmod
+ */
+_p[47] = {
+    value: function() {
+        return function(operands) {
+            operands = operands[0];
+            if (operands[0] === "{") {
+                return "\\pmod" + operands;
+            }
+            return "\\pmod{" + operands + "}";
+        };
+    }
+};
+
+/*!
+ * 逆解析处理函数: product
+ */
+_p[48] = {
+    value: function() {
+        /**
+     * operands中元素对照表
+     * 0: 上标
+     * 1: 下标
+     */
+        return function(operands) {
+            var result = [ "\\prod " ];
+            // 上标
+            if (operands[1]) {
+                result.push("^" + operands[1]);
+            }
+            // 下标
+            if (operands[2]) {
+                result.push("_" + operands[2]);
+            }
+            if (operands[0]) {
+                result.push(" " + operands[0]);
+            }
+            return result.join("");
+        };
+    }
+};
+
+/*!
  * 逆解析处理函数: script
  */
-_p[40] = {
+_p[49] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1437,7 +1636,7 @@ _p[40] = {
 /*!
  * 逆解析处理函数: sqrt
  */
-_p[41] = {
+_p[50] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1459,7 +1658,7 @@ _p[41] = {
 /*!
  * 逆解析处理函数: subscript
  */
-_p[42] = {
+_p[51] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1475,7 +1674,7 @@ _p[42] = {
 /*!
  * 逆解析处理函数: summation
  */
-_p[43] = {
+_p[52] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1503,7 +1702,7 @@ _p[43] = {
 /*!
  * 逆解析处理函数: superscript
  */
-_p[44] = {
+_p[53] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1516,10 +1715,21 @@ _p[44] = {
     }
 };
 
+/*!
+ * 逆解析处理函数: textcircled
+ */
+_p[54] = {
+    value: function() {
+        return function(operands) {
+            return "\\textcircled{" + operands[0] + "}";
+        };
+    }
+};
+
 /**
  * Created by hn on 14-3-20.
  */
-_p[45] = {
+_p[55] = {
     value: function(require) {
         var reverseHandlerTable = _p.r(9), SPECIAL_LIST = _p.r(10), specialCharPattern = /(\\(?:[\w]+)|(?:[^a-z]))\\/gi;
         return function(tree, options) {
@@ -1564,7 +1774,7 @@ _p[45] = {
 /*!
  * Kity Formula 公式表示法Parser接口
  */
-_p[46] = {
+_p[56] = {
     value: function(require, exports, module) {
         // Parser 配置列表
         var CONF = {}, IMPL_POLL = {}, // 内部简单工具类
@@ -1712,18 +1922,18 @@ _p[46] = {
 /*!
  * 启动模块
  */
-_p[47] = {
+_p[57] = {
     value: function(require) {
-        var Parser = _p.r(46).Parser;
+        var Parser = _p.r(56).Parser;
         // 初始化组件
-        _p.r(27);
+        _p.r(32);
         window.kf.Parser = Parser;
         window.kf.Assembly = _p.r(0);
     }
 };
 
 var moduleMapping = {
-    "kf.start": 47
+    "kf.start": 57
 };
 
 function use(name) {

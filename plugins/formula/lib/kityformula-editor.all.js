@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-09-07
+ * Kity Formula Editor - v1.0.0 - 2014-09-12
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -435,7 +435,7 @@ _p[7] = {
 
                       case KEY_CODE.DELETE:
                         e.preventDefault();
-                        _self.delete();
+                        _self.deleteUnit();
                         isControl = true;
                         break;
 
@@ -519,7 +519,7 @@ _p[7] = {
                 this.kfEditor.requestService("syntax.cursor.move.right");
                 this.update();
             },
-            "delete": function() {
+            deleteUnit: function() {
                 var isNeedRedraw = null;
                 // 当前处于"根占位符"上，不允许删除操作
                 if (this.hasRootplaceholder()) {
@@ -536,7 +536,7 @@ _p[7] = {
                 }
             },
             newLine: function() {
-                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin\{cases\}[\s\S]*?\\end\{cases\}/gi, originString = latexInfo.str;
+                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin\{cases\}[\s\S]*?\\end\{cases\}/gi, rootShape = null, originString = latexInfo.str;
                 while (match = pattern.exec(originString)) {
                     index = match.index;
                     match = match[0];
@@ -1789,6 +1789,9 @@ _p[28] = {
             constructor: function(kfEditor, options) {
                 var currentDocument = null;
                 this.options = options;
+                this.lastHeight = -1;
+                this.minHeight - 1;
+                this.notifyCallback = null;
                 this.container = kfEditor.getContainer();
                 currentDocument = this.container.ownerDocument;
                 // ui组件实例集合
@@ -1822,6 +1825,7 @@ _p[28] = {
                 this.editArea = this.editArea.getContentElement();
                 this.initComponents();
                 this.initServices();
+                this.initCommands();
                 this.initEvent();
                 this.updateContainerSize(this.container, this.toolbarWidget.getContentElement(), this.editArea);
                 this.initScrollEvent();
@@ -1831,9 +1835,45 @@ _p[28] = {
                 this.components.scrollbar = new Scrollbar(this, this.kfEditor);
             },
             updateContainerSize: function(container, toolbar, editArea) {
-                var containerBox = container.getBoundingClientRect(), toolbarBox = toolbar.getBoundingClientRect();
+                var containerBox = container.getBoundingClientRect(), toolbarBox = toolbar.getBoundingClientRect(), height = containerBox.bottom - toolbarBox.bottom;
                 editArea.style.width = containerBox.width + "px";
-                editArea.style.height = containerBox.bottom - toolbarBox.bottom + "px";
+                editArea.style.height = height + "px";
+                this.lastHeight = height - 100;
+                this.minHeight = this.lastHeight;
+                this.canvasContainer.style.height = this.lastHeight + "px";
+            },
+            updateCanvasSize: function() {
+                var rootShape = this.kfEditor.requestService("syntax.get.root"), height = -1, shapeHeight = -1;
+                shapeHeight = rootShape.getRenderBox("paper").height;
+                if (shapeHeight < this.lastHeight) {
+                    height = this.minHeight + 100;
+                    if (shapeHeight + 100 < this.lastHeight) {
+                        height = this.lastHeight - Math.max(shapeHeight, this.minHeight);
+                        height = Math.floor(height / 100);
+                        if (height === 0) {
+                            return;
+                        }
+                        this.updateHeight(-height * 100);
+                    }
+                } else {
+                    this.updateHeight(100);
+                }
+            },
+            updateHeight: function(diff) {
+                this.lastHeight += diff;
+                this.canvasContainer.style.height = this.lastHeight + "px";
+                this.editArea.style.height = this.lastHeight + 100 + "px";
+                this.container.style.height = $(this.container).height() + diff + "px";
+                this.notifyContainer(diff);
+            },
+            notifyContainer: function(changeValue) {
+                if (!this.notifyCallback) {
+                    return;
+                }
+                this.notifyCallback(changeValue);
+            },
+            setNotify: function(cb) {
+                this.notifyCallback = cb;
             },
             // 初始化服务
             initServices: function() {
@@ -1852,6 +1892,9 @@ _p[28] = {
                     trigger: this.trigger,
                     fire: this.trigger
                 });
+                this.kfEditor.registerService("ui.update.canvas.size", this, {
+                    updateCanvasSize: this.updateCanvasSize
+                });
                 this.kfEditor.registerService("ui.toolbar.disable", this, {
                     disableToolbar: this.disableToolbar
                 });
@@ -1861,6 +1904,9 @@ _p[28] = {
                 this.kfEditor.registerService("ui.toolbar.close", this, {
                     closeToolbar: this.closeToolbar
                 });
+            },
+            initCommands: function() {
+                this.kfEditor.registerCommand("resize.notify", this, this.setNotify);
             },
             initEvent: function() {
                 var editor = this.kfEditor;
@@ -1920,6 +1966,7 @@ _p[28] = {
                     }
                     this.kfEditor.requestService("render.relocation");
                 }
+                this.updateCanvasSize();
             },
             toggleViewState: function() {
                 this.viewState = this.viewState === VIEW_STATE.NO_OVERFLOW ? VIEW_STATE.OVERFLOW : VIEW_STATE.NO_OVERFLOW;
@@ -3182,7 +3229,7 @@ _p[36] = {
             },
             initComponents: function() {
                 this.components.move = new MoveComponent(this, this.kfEditor);
-                this.components.delete = new DeleteComponent(this, this.kfEditor);
+                this.components.deleteComp = new DeleteComponent(this, this.kfEditor);
             },
             initServices: function() {
                 this.kfEditor.registerService("syntax.update.objtree", this, {
@@ -3448,7 +3495,7 @@ _p[36] = {
             },
             // 根据当前光标的信息，删除组
             deleteGroup: function() {
-                return this.components.delete.deleteGroup();
+                return this.components.deleteComp.deleteGroup();
             },
             insertSubtree: function(subtree) {
                 var cursorInfo = this.record.cursor, // 当前光标信息所在的子树
