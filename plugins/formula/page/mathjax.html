@@ -37,7 +37,8 @@
 <body>
     <script>
 
-        var source = decodeURIComponent( location.search );
+        var source = decodeURIComponent( location.search ),
+            ckEditor = null;
 
         if ( source.charAt( 0 ) === '?' ) {
             source = source.substring( 1 );
@@ -50,7 +51,14 @@
         document.ondblclick = function ( e ) {
             e.preventDefault();
             var frameElement = document.defaultView.frameElement;
-            frameElement.ownerDocument.reopenFormula( frameElement.getAttribute( "data-source" ), frameElement );
+
+            if ( !ckEditor ) {
+                ckEditor = frameElement.ownerDocument.__ckEditor;
+            }
+
+            if ( ckEditor ) {
+                ckEditor.reopenFormula( frameElement.getAttribute( "data-source" ), frameElement );
+            }
         };
 
     </script>

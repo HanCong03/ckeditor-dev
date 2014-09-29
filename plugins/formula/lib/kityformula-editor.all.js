@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-09-12
+ * Kity Formula Editor - v1.0.0 - 2014-09-29
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -1856,7 +1856,7 @@ _p[28] = {
                         this.updateHeight(-height * 100);
                     }
                 } else {
-                    this.updateHeight(100);
+                    this.updateHeight(Math.ceil((shapeHeight - this.lastHeight) / 100) * 100);
                 }
             },
             updateHeight: function(diff) {

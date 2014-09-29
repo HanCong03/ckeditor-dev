@@ -681,7 +681,7 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b10-btn-4',
-                            value: '\\prep'
+                            value: '\\perp'
                         },
                         {
                             clazz: 'Button',

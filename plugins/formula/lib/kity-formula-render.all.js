@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Render - v1.0.0 - 2014-09-12
+ * Kity Formula Render - v1.0.0 - 2014-09-29
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -4297,7 +4297,8 @@ _p[30] = {
  */
 _p[31] = {
     value: function(require) {
-        var kity = _p.r(41), FontManager = _p.r(32), $ = _p.r(40), FONT_CONF = _p.r(61).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
+        var kity = _p.r(41), FontManager = _p.r(32), //        $ = _p.r(40),
+        FONT_CONF = _p.r(61).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
         return kity.createClass("FontInstaller", {
             constructor: function(doc, resource) {
                 this.callBase();
@@ -4327,19 +4328,17 @@ _p[31] = {
             }
         });
         function preload(doc, fontInfo, callback) {
-            $.get(fontInfo.meta.src, function(data, state) {
-                if (state === "success") {
-                    applyFonts(doc, fontInfo);
-                }
+            window.setTimeout(function() {
+                applyFonts(doc, fontInfo);
                 callback();
-            });
+            }, 0);
         }
         function complete(doc, callback) {
             window.setTimeout(function() {
                 initFontSystemInfo(doc);
                 removeTmpNode();
                 callback();
-            }, 100);
+            }, 0);
         }
         function applyFonts(doc, fontInfo) {
             var node = document.createElement("div"), fontFamily = fontInfo.meta.fontFamily;
@@ -4790,7 +4789,6 @@ _p[36] = {
                 nVdash: "⊮",
                 nvDash: "⊭",
                 nVDash: "⊯",
-                perp: "⊥",
                 pitchfork: "⋔",
                 propto: "∝",
                 shortmid: "⏐",
@@ -4844,7 +4842,7 @@ _p[36] = {
                 ldots: "…",
                 "#": "#",
                 bot: "⊥",
-                prep: "⊥",
+                perp: "⊥",
                 angle: "∠",
                 backprime: "‵",
                 bigstar: "★",
