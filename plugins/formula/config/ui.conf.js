@@ -44,8 +44,8 @@ var KF_UI_CONFIG = {
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b1-btn-4 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b1-btn-4',
+                            value: '\\left(\\begin{array}{ccc}\\placeholder&\\placeholder\\\\\\placeholder&\\placeholder\\end{array}\\right)'
                         },
                         {
                             clazz: 'Button',
@@ -54,13 +54,13 @@ var KF_UI_CONFIG = {
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b1-btn-6 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b1-btn-6',
+                            value: '\\underbrace {\\placeholder}_{\\placeholder}'
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b1-btn-7 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b1-btn-7',
+                            value: '\\left|\\begin{array}{ccc}\\placeholder&\\placeholder\\\\\\placeholder&\\placeholder\\end{array}\\right|'
                         }
                     ]
                 },
@@ -183,8 +183,7 @@ var KF_UI_CONFIG = {
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b3-btn-6 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b3-btn-6'
                         },
                         {
                             clazz: 'Button',
@@ -417,13 +416,13 @@ var KF_UI_CONFIG = {
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b6-btn-10 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b6-btn-10',
+                            value: '\\left(\\begin{array}{ccc} \\placeholder& \\ placeholder & \\placeholder \\\\ \\placeholder & \\placeholder & \\placeholder \\\\ \\placeholder & \\placeholder & \\placeholder \\end{array}\\right)'
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b6-btn-11 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b6-btn-11',
+                            value: '\\left|\\begin{array}{ccc} \\placeholder& \\ placeholder & \\placeholder \\\\ \\placeholder & \\placeholder & \\placeholder \\\\ \\placeholder & \\placeholder & \\placeholder \\end{array}\\right|'
                         },
                         {
                             clazz: 'Button',
@@ -710,8 +709,8 @@ var KF_UI_CONFIG = {
                         },
                         {
                             clazz: 'Button',
-                            className: 'kfe-ui-b10-btn-10 kfe-ext-disabled',
-                            disabled: true
+                            className: 'kfe-ui-b10-btn-10',
+                            value: '\\wideparen {\\placeholder}'
                         }
                     ]
                 },

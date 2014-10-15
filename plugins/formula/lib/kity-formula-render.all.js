@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Render - v1.0.0 - 2014-09-29
+ * Kity Formula Render - v1.0.0 - 2014-10-15
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -3248,7 +3248,7 @@ _p[0] = {
  */
 _p[1] = {
     value: function(require) {
-        var kity = _p.r(41), canvg = _p.r(0);
+        var kity = _p.r(43), canvg = _p.r(0);
         return kity.createClass("Output", {
             constructor: function(formula) {
                 this.formula = formula;
@@ -3344,7 +3344,7 @@ _p[3] = {
  */
 _p[4] = {
     value: function(require) {
-        var kity = _p.r(41), divNode = document.createElement("div"), NAMESPACE = "http://www.w3.org/XML/1998/namespace";
+        var kity = _p.r(43), divNode = document.createElement("div"), NAMESPACE = "http://www.w3.org/XML/1998/namespace";
         function createText(content) {
             var text = new kity.Text();
             // Non-IE
@@ -3378,9 +3378,9 @@ _p[4] = {
  */
 _p[5] = {
     value: function(require) {
-        var kity = _p.r(41), FONT_CONF = _p.r(61).font, FontManager = _p.r(32), TextFactory = _p.r(4);
+        var kity = _p.r(43), FONT_CONF = _p.r(65).font, FontManager = _p.r(34), TextFactory = _p.r(4);
         return kity.createClass("Text", {
-            base: _p.r(60),
+            base: _p.r(64),
             constructor: function(content, fontFamily) {
                 this.callBase();
                 this.fontFamily = fontFamily;
@@ -3470,32 +3470,21 @@ _p[7] = {
  */
 _p[8] = {
     value: function(require) {
-        var kity = _p.r(41), ArrayOperator = _p.r(42), ArrayExpression = kity.createClass("ArrayExpression", {
-            base: _p.r(26),
-            constructor: function(delimiters, cols) {
-                var index = 0;
+        var kity = _p.r(43), ArrayOperator = _p.r(44), ArrayExpression = kity.createClass("ArrayExpression", {
+            base: _p.r(28),
+            constructor: function() {
+                var cols = arguments;
                 this.callBase();
-                if (!cols) {
-                    cols = delimiters;
-                    delimiters = null;
-                }
-                this.colNum = cols.length;
-                this.hasDel = delimiters !== null;
+                this.colNum = 0;
                 this.setFlag("Array");
                 this.setOperator(new ArrayOperator());
-                for (var i = 0, len = cols[0].length; i < len; i++) {
-                    for (var j = 0, jlen = cols.length; j < jlen; j++) {
-                        this.setOperand(cols[j][i], index);
-                        index++;
-                        if (this.hasDel && j != jlen - 1) {
-                            this.setOperand(delimiters[j], index);
-                            index++;
-                        }
-                    }
+                for (var i = 0, len = cols.length; i < len; i++) {
+                    this.setOperand(cols[i], i);
                 }
             },
-            hasDelimiter: function() {
-                return this.hasDel;
+            setColNum: function(colNum) {
+                this.colNum = colNum;
+                return this;
             },
             getColNum: function() {
                 return this.colNum;
@@ -3510,7 +3499,7 @@ _p[8] = {
  */
 _p[9] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("SubscriptExpression", {
             base: _p.r(23),
             constructor: function(operand, subscript) {
@@ -3526,7 +3515,7 @@ _p[9] = {
  */
 _p[10] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("SuperscriptExpression", {
             base: _p.r(23),
             constructor: function(operand, superscript) {
@@ -3542,9 +3531,9 @@ _p[10] = {
  */
 _p[11] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("BinaryExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             constructor: function(firstOperand, lastOperand) {
                 this.callBase();
                 this.setFirstOperand(firstOperand);
@@ -3571,9 +3560,9 @@ _p[11] = {
  */
 _p[12] = {
     value: function(require) {
-        var kity = _p.r(41), BracketsOperator = _p.r(43);
+        var kity = _p.r(43), BracketsOperator = _p.r(45);
         return kity.createClass("BracketsExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             /**
          * 构造函数调用方式：
          *  new Constructor( 左括号, 右括号, 表达式 )
@@ -3611,9 +3600,9 @@ _p[12] = {
  */
 _p[13] = {
     value: function(require) {
-        var kity = _p.r(41), CasesOperator = _p.r(44);
+        var kity = _p.r(43), CasesOperator = _p.r(46);
         return kity.createClass("CasesExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             /**
          * 构造Cases表达式
          */
@@ -3636,9 +3625,9 @@ _p[13] = {
  */
 _p[14] = {
     value: function(require) {
-        var kity = _p.r(41), FONT_CONF = _p.r(61).font, CombinationOperator = _p.r(45);
+        var kity = _p.r(43), FONT_CONF = _p.r(65).font, CombinationOperator = _p.r(47);
         return kity.createClass("CombinationExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             constructor: function() {
                 this.callBase();
                 this.setFlag("Combination");
@@ -3683,7 +3672,7 @@ _p[14] = {
  */
 _p[15] = {
     value: function(require) {
-        var kity = _p.r(41), FractionOperator = _p.r(47);
+        var kity = _p.r(43), FractionOperator = _p.r(49);
         return kity.createClass("FractionExpression", {
             base: _p.r(11),
             constructor: function(upOperand, downOperand) {
@@ -3712,9 +3701,9 @@ _p[15] = {
  */
 _p[16] = {
     value: function(require) {
-        var kity = _p.r(41), FUNC_CONF = _p.r(61).func, FunctionOperator = _p.r(48);
+        var kity = _p.r(43), FUNC_CONF = _p.r(65).func, FunctionOperator = _p.r(50);
         return kity.createClass("FunctionExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             /**
          * function表达式构造函数
          * @param funcName function名称
@@ -3753,8 +3742,8 @@ _p[16] = {
  */
 _p[17] = {
     value: function(require) {
-        var kity = _p.r(41), HatOperator = _p.r(49), HatExpression = kity.createClass("HatExpression", {
-            base: _p.r(26),
+        var kity = _p.r(43), HatOperator = _p.r(51), HatExpression = kity.createClass("HatExpression", {
+            base: _p.r(28),
             constructor: function(expr) {
                 this.callBase();
                 this.setFlag("Hat");
@@ -3775,8 +3764,8 @@ _p[17] = {
  */
 _p[18] = {
     value: function(require) {
-        var kity = _p.r(41), IntegrationOperator = _p.r(50), IntegrationExpression = kity.createClass("IntegrationExpression", {
-            base: _p.r(26),
+        var kity = _p.r(43), IntegrationOperator = _p.r(52), IntegrationExpression = kity.createClass("IntegrationExpression", {
+            base: _p.r(28),
             /**
              * 构造积分表达式
              * @param integrand 被积函数
@@ -3818,8 +3807,8 @@ _p[18] = {
  */
 _p[19] = {
     value: function(require) {
-        var kity = _p.r(41), OverlineOperator = _p.r(52), OverlineExpression = kity.createClass("OverlineExpression", {
-            base: _p.r(26),
+        var kity = _p.r(43), OverlineOperator = _p.r(54), OverlineExpression = kity.createClass("OverlineExpression", {
+            base: _p.r(28),
             constructor: function(expr) {
                 this.callBase();
                 this.setFlag("Overline");
@@ -3836,8 +3825,8 @@ _p[19] = {
  */
 _p[20] = {
     value: function(require) {
-        var kity = _p.r(41), PmodOperator = _p.r(53), PmodExpression = kity.createClass("PmodExpression", {
-            base: _p.r(26),
+        var kity = _p.r(43), PmodOperator = _p.r(55), PmodExpression = kity.createClass("PmodExpression", {
+            base: _p.r(28),
             constructor: function(expr) {
                 this.callBase();
                 this.setFlag("PMod");
@@ -3854,9 +3843,9 @@ _p[20] = {
  */
 _p[21] = {
     value: function(require) {
-        var kity = _p.r(41), ProductOperator = _p.r(54);
+        var kity = _p.r(43), ProductOperator = _p.r(56);
         return kity.createClass("ProductExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             /**
          * 构造求和表达式
          * @param expr 求和表达式
@@ -3889,7 +3878,7 @@ _p[21] = {
  */
 _p[22] = {
     value: function(require) {
-        var kity = _p.r(41), RadicalOperator = _p.r(55);
+        var kity = _p.r(43), RadicalOperator = _p.r(57);
         return kity.createClass("RadicalExpression", {
             base: _p.r(11),
             /**
@@ -3923,9 +3912,9 @@ _p[22] = {
  */
 _p[23] = {
     value: function(require) {
-        var kity = _p.r(41), ScriptOperator = _p.r(56);
+        var kity = _p.r(43), ScriptOperator = _p.r(58);
         return kity.createClass("ScriptExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             constructor: function(operand, superscript, subscript) {
                 this.callBase();
                 this.setFlag("Script");
@@ -3952,9 +3941,9 @@ _p[23] = {
  */
 _p[24] = {
     value: function(require) {
-        var kity = _p.r(41), SummationOperator = _p.r(57);
+        var kity = _p.r(43), SummationOperator = _p.r(59);
         return kity.createClass("SummationExpression", {
-            base: _p.r(26),
+            base: _p.r(28),
             /**
          * 构造求和表达式
          * @param expr 求和表达式
@@ -3987,8 +3976,8 @@ _p[24] = {
  */
 _p[25] = {
     value: function(require) {
-        var kity = _p.r(41), CHAR_MAPPING = "⓪①②③④⑤⑥⑦⑧⑨⑩".split(""), TextcircledOperator = _p.r(58), TextcircledExpression = kity.createClass("TextcircledExpression", {
-            base: _p.r(26),
+        var kity = _p.r(43), CHAR_MAPPING = "⓪①②③④⑤⑥⑦⑧⑨⑩".split(""), TextcircledOperator = _p.r(60), TextcircledExpression = kity.createClass("TextcircledExpression", {
+            base: _p.r(28),
             constructor: function(expr) {
                 this.callBase();
                 this.setFlag("Textcircled");
@@ -4001,14 +3990,54 @@ _p[25] = {
 };
 
 /**
- * 复合表达式
- * @abstract
+ * 自动增长括号表达式
  */
 _p[26] = {
     value: function(require) {
-        var kity = _p.r(41), GTYPE = _p.r(6), Expression = _p.r(28);
-        return kity.createClass("CompoundExpression", {
+        var kity = _p.r(43), UnderbraceOperator = _p.r(61);
+        return kity.createClass("UnderbraceExpression", {
             base: _p.r(28),
+            constructor: function(up, down) {
+                this.callBase();
+                this.setFlag("Underbrace");
+                this.setOperator(new UnderbraceOperator());
+                this.setOperand(up, 0);
+                this.setOperand(down, 1);
+            }
+        });
+    }
+};
+
+/**
+ * CASES表达式
+ */
+_p[27] = {
+    value: function(require) {
+        var kity = _p.r(43), WideparenOperator = _p.r(62);
+        return kity.createClass("WideparenExpression", {
+            base: _p.r(28),
+            /**
+         * 构造Cases表达式
+         */
+            constructor: function(exp) {
+                this.callBase();
+                this.setFlag("Wideparen");
+                this.setOperator(new WideparenOperator());
+                this.setOperand(exp, 0);
+            }
+        });
+    }
+};
+
+/**
+ * 复合表达式
+ * @abstract
+ */
+_p[28] = {
+    value: function(require) {
+        var kity = _p.r(43), GTYPE = _p.r(6), Expression = _p.r(30);
+        return kity.createClass("CompoundExpression", {
+            base: _p.r(30),
             constructor: function() {
                 this.callBase();
                 this.type = GTYPE.COMPOUND_EXP;
@@ -4072,9 +4101,9 @@ _p[26] = {
  * 空表达式
  * 该表达式主要用途是用于占位
  */
-_p[27] = {
+_p[29] = {
     value: function(require) {
-        var kity = _p.r(41), FONT_CONF = _p.r(61).font, Expression = _p.r(28), EmptyExpression = kity.createClass("EmptyExpression", {
+        var kity = _p.r(43), FONT_CONF = _p.r(65).font, Expression = _p.r(30), EmptyExpression = kity.createClass("EmptyExpression", {
             base: Expression,
             constructor: function() {
                 this.callBase();
@@ -4106,12 +4135,12 @@ _p[27] = {
  * 基础表达式， 该类是表达式和操作数的高层抽象
  * @abstract
  */
-_p[28] = {
+_p[30] = {
     value: function(require) {
-        var kity = _p.r(41), GTYPE = _p.r(6), FONT_CONF = _p.r(61).font, // 打包函数列表
+        var kity = _p.r(43), GTYPE = _p.r(6), FONT_CONF = _p.r(65).font, // 打包函数列表
         WRAP_FN = [], // 注册的打包函数的名称与其在注册器列表中的索引之间的对应关系
         WRAP_FN_INDEX = {}, Expression = kity.createClass("Expression", {
-            base: _p.r(60),
+            base: _p.r(64),
             constructor: function() {
                 this.callBase();
                 this.type = GTYPE.EXP;
@@ -4241,10 +4270,10 @@ _p[28] = {
 /**
  * Text表达式
  */
-_p[29] = {
+_p[31] = {
     value: function(require) {
-        var Text = _p.r(5), kity = _p.r(41), CHAR_MAPPING = "⓪①②③④⑤⑥⑦⑧⑨⑩".split(""), FONT_CONF = _p.r(3), Expression = _p.r(28), TextExpression = kity.createClass("TextExpression", {
-            base: _p.r(28),
+        var Text = _p.r(5), kity = _p.r(43), CHAR_MAPPING = "⓪①②③④⑤⑥⑦⑧⑨⑩".split(""), FONT_CONF = _p.r(3), Expression = _p.r(30), TextExpression = kity.createClass("TextExpression", {
+            base: _p.r(30),
             constructor: function(content, fontFamily) {
                 this.callBase();
                 this.fontFamily = fontFamily || FONT_CONF.defaultFont;
@@ -4286,7 +4315,7 @@ _p[29] = {
 /*!
  * 字体信息检测模板，用于检测浏览器的字体信息
  */
-_p[30] = {
+_p[32] = {
     value: function() {
         return [ '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">', '<text id="abcd" font-family="KF AMS MAIN" font-size="50" x="0" y="0">x</text>', "</svg>" ];
     }
@@ -4295,10 +4324,10 @@ _p[30] = {
 /*!
  * 字体安装器
  */
-_p[31] = {
+_p[33] = {
     value: function(require) {
-        var kity = _p.r(41), FontManager = _p.r(32), //        $ = _p.r(40),
-        FONT_CONF = _p.r(61).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
+        var kity = _p.r(43), FontManager = _p.r(34), //        $ = _p.r(42),
+        FONT_CONF = _p.r(65).font, CHAR_LIST = _p.r(2), NODE_LIST = [];
         return kity.createClass("FontInstaller", {
             constructor: function(doc, resource) {
                 this.callBase();
@@ -4354,7 +4383,7 @@ _p[31] = {
         function initFontSystemInfo(doc) {
             var tmpNode = doc.createElement("div");
             tmpNode.style.cssText = "position: absolute; top: 0; left: -100000px;";
-            tmpNode.innerHTML = _p.r(30).join("");
+            tmpNode.innerHTML = _p.r(32).join("");
             doc.body.appendChild(tmpNode);
             var rectBox = tmpNode.getElementsByTagName("text")[0].getBBox();
             // text实际占用空间
@@ -4385,9 +4414,9 @@ _p[31] = {
 /*!
  * 字体管理器
  */
-_p[32] = {
+_p[34] = {
     value: function(require) {
-        var FONT_LIST = {}, kity = _p.r(41), CONF = _p.r(61).font.list;
+        var FONT_LIST = {}, kity = _p.r(43), CONF = _p.r(65).font.list;
         // init
         (function() {
             kity.Utils.each(CONF, function(fontData) {
@@ -4411,7 +4440,7 @@ _p[32] = {
 /*!
  * 双线字体
  */
-_p[33] = {
+_p[35] = {
     value: function() {
         return {
             meta: {
@@ -4425,7 +4454,7 @@ _p[33] = {
 /*!
  * 手写体
  */
-_p[34] = {
+_p[36] = {
     value: function() {
         return {
             meta: {
@@ -4439,7 +4468,7 @@ _p[34] = {
 /*!
  * 花体
  */
-_p[35] = {
+_p[37] = {
     value: function() {
         return {
             meta: {
@@ -4453,7 +4482,7 @@ _p[35] = {
 /*!
  * 字体主文件
  */
-_p[36] = {
+_p[38] = {
     value: function() {
         return {
             meta: {
@@ -4884,7 +4913,7 @@ _p[36] = {
 /*!
  * 罗马字体
  */
-_p[37] = {
+_p[39] = {
     value: function() {
         return {
             meta: {
@@ -4898,9 +4927,9 @@ _p[37] = {
 /**
  * 公式对象，表达式容器
  */
-_p[38] = {
+_p[40] = {
     value: function(require) {
-        var kity = _p.r(41), GTYPE = _p.r(6), FontManager = _p.r(32), FontInstaller = _p.r(31), DEFAULT_OPTIONS = {
+        var kity = _p.r(43), GTYPE = _p.r(6), FontManager = _p.r(34), FontInstaller = _p.r(33), DEFAULT_OPTIONS = {
             fontsize: 50,
             autoresize: true,
             padding: [ 0 ]
@@ -4933,7 +4962,7 @@ _p[38] = {
                 this.exp.translate(padding[1], padding[0]);
             }
         }), Formula = kity.createClass("Formula", {
-            base: _p.r(39),
+            base: _p.r(41),
             constructor: function(container, config) {
                 this.callBase(container);
                 this.expressions = [];
@@ -5060,9 +5089,9 @@ _p[38] = {
 /**
  * 公式专用paper
  */
-_p[39] = {
+_p[41] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("FPaper", {
             base: kity.Paper,
             constructor: function(container) {
@@ -5102,7 +5131,7 @@ _p[39] = {
 /**
  * jquery
  */
-_p[40] = {
+_p[42] = {
     value: function() {
         if (!window.jQuery) {
             throw new Error("Missing jQuery");
@@ -5114,7 +5143,7 @@ _p[40] = {
 /**
  * kity库封包
  */
-_p[41] = {
+_p[43] = {
     value: function() {
         if (!window.kity) {
             throw new Error("Missing Kity Graphic Lib");
@@ -5126,54 +5155,43 @@ _p[41] = {
 /**
  * 数学重音符号
  */
-_p[42] = {
+_p[44] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("ArrayOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Array");
             },
             applyOperand: function() {
-                var args = arguments, parentExpr = this.parentExpression, colNum = parentExpr.getColNum(), rowNum = -1, colCount = -1, boxs = null, padding = 5, left = -1, top = -1, offsetX = 0, offsetY = 0, hasDel = parentExpr.hasDelimiter();
-                if (hasDel) {
-                    rowNum = args.length / (colNum * 2 - 1);
-                } else {
-                    rowNum = args.length / colNum;
+                var args = [].slice.call(arguments), parentExpr = this.parentExpression, colNum = parentExpr.getColNum(), boxs = this.getBoxs(args);
+                var maxHeights = [], maxWidths = [], tmp = 0;
+                for (var i = 0, len = args.length / colNum; i < len; i++) {
+                    tmp = 0;
+                    for (var j = 0, jlen = colNum; j < jlen; j++) {
+                        tmp = Math.max(tmp, boxs[i * colNum + j].height);
+                        maxWidths[j] = Math.max(maxWidths[j] || 0, boxs[i * colNum + j].width);
+                    }
+                    maxHeights[i] = tmp;
                 }
-                colCount = args.length / rowNum;
-                boxs = this.getBoxs(colCount, args);
-                // 调整位置, 一行一行的调整
-                for (var i = 0, len = args.length; i < len; i++) {
-                    var colIndex = i % colCount, rowIndex = Math.floor(i / colCount);
-                    if (colIndex === 0) {
-                        offsetX = 0;
-                        if (rowIndex > 0) {
-                            offsetY += boxs.maxHeight[rowIndex - 1] + padding;
-                        }
+                this.relocation(args, boxs, maxWidths, maxHeights, colNum);
+            },
+            relocation: function(operands, boxs, widths, heights, colNum) {
+                var offsetY = 0, padding = 5, offsetX = 0, index = 0;
+                for (var i = 0, len = operands.length / colNum; i < len; i++) {
+                    offsetX = 0;
+                    for (var j = 0, jlen = colNum; j < jlen; j++) {
+                        index = i * colNum + j;
+                        operands[index].translate(offsetX + (widths[j] - boxs[index].width) / 2, offsetY + (heights[i] - boxs[index].height) / 2);
+                        offsetX += widths[j] + padding;
                     }
-                    left = offsetX + (boxs.maxWidth[colIndex] - boxs.space[i].width) / 2;
-                    top = offsetY + (boxs.maxHeight[rowIndex] - boxs.space[i].height) / 2;
-                    if (colIndex !== 0) {
-                        left += padding;
-                    }
-                    args[i].translate(left, top);
-                    offsetX += boxs.maxWidth[colIndex] + padding;
+                    offsetY += heights[i] + padding;
                 }
             },
-            getBoxs: function(count, shapes) {
-                var shape = null, boxs = {
-                    maxWidth: [],
-                    maxHeight: [],
-                    space: []
-                }, rowNum = -1;
-                for (var i = 0, len = shapes.length; i < len; i++) {
-                    rowNum = Math.floor(i / count);
-                    shape = shapes[i];
-                    shape = shape.getFixRenderBox();
-                    boxs.space.push(shape);
-                    boxs.maxWidth[i % count] = Math.max(boxs.maxWidth[i % count] || 0, shape.width);
-                    boxs.maxHeight[rowNum] = Math.max(boxs.maxHeight[rowNum] || 0, shape.height);
+            getBoxs: function(operands) {
+                var boxs = [];
+                for (var i = 0, len = operands.length; i < len; i++) {
+                    boxs[i] = operands[i].getFixRenderBox();
                 }
                 return boxs;
             }
@@ -5184,11 +5202,11 @@ _p[42] = {
 /**
  * 小括号操作符：()
  */
-_p[43] = {
+_p[45] = {
     value: function(require) {
-        var kity = _p.r(41), Text = _p.r(5);
+        var kity = _p.r(43), Text = _p.r(5);
         return kity.createClass("BracketsOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Brackets");
             },
@@ -5212,37 +5230,60 @@ _p[43] = {
 /**
  * Cases操作符
  */
-_p[44] = {
+_p[46] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43), sign1 = "M4.825,23.839V9.577c0-2.88,1.872-7.489,9.721-7.993c0.36-0.072,0.648-0.36,0.648-0.792C15.193,0,14.617,0,13.825,0   C6.625,0,0.072,3.672,0,9.001v14.838H4.825z", sign2 = "M10.153,18.365c0.178,0.655,0.209,0.871,0.215,2.39h4.824c-0.007-3.266-0.589-4.493-2.879-6.783   c-1.512-1.512-3.601-2.232-5.617-2.808c5.905-1.656,8.497-4.969,8.497-9.145V0h-4.825v0.579c0,2.808,0,5.112-2.88,7.489   c-2.52,2.088-5.256,2.232-6.84,2.304C0.288,10.444,0,10.732,0,11.164c0,0.72,0.432,0.72,1.152,0.792   C5.904,12.244,9.361,14.836,10.153,18.365z", sign3 = "M14.042,23.828c-4.537-0.288-8.065-2.592-9.001-6.265c-0.216-0.648-0.216-0.792-0.216-3.384V0H0v14.395   c0,3.024,0,5.329,3.457,8.065c2.808,2.16,7.561,2.952,10.369,2.952c0.792,0,1.368,0,1.368-0.792   C15.193,23.9,14.761,23.9,14.042,23.828z";
         return kity.createClass("CasesOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Cases");
             },
             applyOperand: function() {
-                var operands = arguments, opShape = null, width = 0, height = 0, padding = 10, margin = 10, opBox = null;
+                var operands = arguments, width = 0, height = 0, padding = 10, opBox = null;
                 for (var i = 0, len = operands.length; i < len; i++) {
                     opBox = operands[i].getFixRenderBox();
                     width = Math.max(width, opBox.width);
                     operands[i].translate(0, height);
                     height += opBox.height;
                 }
-                opShape = this.getOperatorShape(height);
-                opBox = opShape.getRenderBox(this.parentExpression.container.container);
+                var box = this.getOperatorShape(height);
+                var diff = (box.height - height) / 2;
+                diff = Math.max(diff, 0);
                 for (var i = 0, len = operands.length; i < len; i++) {
-                    operands[i].translate(opBox.width + margin, 0);
+                    operands[i].translate(box.width, diff);
                 }
                 this.parentExpression.expand(padding * 8, padding * 2);
                 this.parentExpression.translateElement(padding, padding);
             },
             getOperatorShape: function(height) {
-                var pathData = "M2.592,33.627c5.04,0.864,8.353,4.176,8.353,10.225v11.665c0,6.553,1.584,9.721,7.417,9.721v1.872   c-8.641,0-11.881-3.457-11.881-11.593V42.556c0-4.824-2.376-6.913-6.48-8.064v-1.873c4.104-1.224,6.48-3.312,6.48-8.137V11.665   C6.48,3.457,9.721,0,18.361,0v1.944c-5.833,0-7.417,3.168-7.417,9.792v11.521c0,5.977-3.313,9.361-8.353,10.153V33.627z", opShape = new kity.Path(pathData).fill("black"), opBox = null, scaleValue = 1;
-                this.addOperatorShape(opShape);
-                opBox = opShape.getRenderBox(this.parentExpression.container.container);
-                scaleValue = height / opBox.height;
-                opShape.scale(scaleValue * .5, scaleValue);
-                return opShape;
+                var group = new kity.Group(), lineWidth = 4.8, shapes = [ new kity.Path(sign1).fill("black"), new kity.Path(sign2).fill("black"), new kity.Path(sign3).fill("black"), new kity.Rect(lineWidth, 0).fill("black"), new kity.Rect(lineWidth, 0).fill("black") ], box = [], offset = 0, originHeight = 0;
+                this.addOperatorShape(group);
+                for (var i = 0; i < 5; i++) {
+                    group.addShape(shapes[i]);
+                    box[i] = shapes[i].getFixRenderBox();
+                }
+                originHeight = box[0].height + box[1].height + box[2].height;
+                if (originHeight >= height) {
+                    shapes[0].translate(box[1].width - lineWidth, 0);
+                    shapes[1].translate(0, box[0].height);
+                    shapes[2].translate(box[1].width - lineWidth, box[0].height + box[1].height);
+                    shapes[3].remove();
+                    shapes[4].remove();
+                } else {
+                    height = (height - originHeight) / 2;
+                    shapes[3].setHeight(height);
+                    shapes[4].setHeight(height);
+                    shapes[0].translate(box[1].width - lineWidth, offset);
+                    offset += box[0].height;
+                    shapes[3].translate(box[1].width - lineWidth, offset);
+                    offset += height;
+                    shapes[1].translate(0, offset);
+                    offset += box[1].height;
+                    shapes[4].translate(box[1].width - lineWidth, offset);
+                    offset += height;
+                    shapes[2].translate(box[1].width - lineWidth, offset);
+                }
+                return group.getFixRenderBox();
             }
         });
     }
@@ -5252,11 +5293,11 @@ _p[44] = {
  * 组合操作符
  * 操作多个表达式组合在一起
  */
-_p[45] = {
+_p[47] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("CombinationOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Combination");
             },
@@ -5291,9 +5332,9 @@ _p[45] = {
 /*!
  * 上下标控制器
  */
-_p[46] = {
+_p[48] = {
     value: function(require) {
-        var kity = _p.r(41), EmptyExpression = _p.r(27), defaultOptions = {
+        var kity = _p.r(43), EmptyExpression = _p.r(29), defaultOptions = {
             subOffset: 0,
             supOffset: 0,
             // 上下标的默认缩放值
@@ -5487,11 +5528,11 @@ _p[46] = {
 /**
  * 分数操作符
  */
-_p[47] = {
+_p[49] = {
     value: function(require) {
-        var kity = _p.r(41), ZOOM = _p.r(61).zoom;
+        var kity = _p.r(43), ZOOM = _p.r(65).zoom;
         return kity.createClass("FractionOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.zoom = ZOOM;
                 this.callBase("Fraction");
@@ -5524,11 +5565,11 @@ _p[47] = {
 /**
  * 函数操作符
  */
-_p[48] = {
+_p[50] = {
     value: function(require) {
-        var kity = _p.r(41), Text = _p.r(5), ScriptController = _p.r(46);
+        var kity = _p.r(43), Text = _p.r(5), ScriptController = _p.r(48);
         return kity.createClass("FunctionOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function(funcName) {
                 this.callBase("Function: " + funcName);
                 this.funcName = funcName;
@@ -5580,14 +5621,14 @@ _p[48] = {
 /**
  * 数学重音符号
  */
-_p[49] = {
+_p[51] = {
     value: function(require) {
-        var kity = _p.r(41), widehatData = [ // small
+        var kity = _p.r(43), widehatData = [ // small
         "M27.938,7.681l-0.576,1.2L13.969,2.976L0.576,8.88L0,7.632L13.969,0L27.938,7.681z", // middle
         "M49.684,8.305L49.3,9.553L24.866,2.976L0.384,9.553L0,8.305L24.866,0L49.684,8.305z", // big
         "M35.763,2.976L0.288,9.601L0,8.256L35.763,0l34.995,8.113c0.672,0.144,0.72,0.192,0.72,0.288c0,0.192-0.192,0.96-0.24,1.2   L35.763,2.976z" ];
         return kity.createClass("HatOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Hat");
             },
@@ -5633,11 +5674,11 @@ _p[49] = {
 /**
  * 积分操作符：∫
  */
-_p[50] = {
+_p[52] = {
     value: function(require) {
-        var kity = _p.r(41), ScriptController = _p.r(46);
+        var kity = _p.r(43), ScriptController = _p.r(48);
         return kity.createClass("IntegrationOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function(type) {
                 this.callBase("Integration");
                 // 默认是普通单重积分
@@ -5699,11 +5740,11 @@ _p[50] = {
  * 操作符抽象类
  * @abstract
  */
-_p[51] = {
+_p[53] = {
     value: function(require) {
-        var kity = _p.r(41), GTYPE = _p.r(6);
+        var kity = _p.r(43), GTYPE = _p.r(6);
         return kity.createClass("Operator", {
-            base: _p.r(60),
+            base: _p.r(64),
             constructor: function(operatorName) {
                 this.callBase();
                 this.type = GTYPE.OP;
@@ -5741,11 +5782,11 @@ _p[51] = {
 /**
  * 上划线操作符
  */
-_p[52] = {
+_p[54] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("OverlineOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Overline");
             },
@@ -5767,11 +5808,11 @@ _p[52] = {
 /**
  * pmod操作符
  */
-_p[53] = {
+_p[55] = {
     value: function(require) {
-        var kity = _p.r(41), Text = _p.r(5);
+        var kity = _p.r(43), Text = _p.r(5);
         return kity.createClass("PmodOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Pmod");
             },
@@ -5808,11 +5849,11 @@ _p[53] = {
 /**
  * 求和操作符：∑
  */
-_p[54] = {
+_p[56] = {
     value: function(require) {
-        var kity = _p.r(41), ScriptController = _p.r(46);
+        var kity = _p.r(43), ScriptController = _p.r(48);
         return kity.createClass("ProductOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Product");
                 this.displayType = "equation";
@@ -5855,14 +5896,14 @@ _p[54] = {
 /**
  * 开方操作符
  */
-_p[55] = {
+_p[57] = {
     value: function(require) {
-        var kity = _p.r(41), // 符号图形属性
+        var kity = _p.r(43), // 符号图形属性
         // 线条宽度
         SHAPE_DATA_WIDTH = 1, // 计算公式
         radians = 2 * Math.PI / 360, sin15 = Math.sin(15 * radians), cos15 = Math.cos(15 * radians), tan15 = Math.tan(15 * radians);
         return kity.createClass("RadicalOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Radical");
             },
@@ -5952,11 +5993,11 @@ _p[55] = {
 /**
  * 上下标操作符
  */
-_p[56] = {
+_p[58] = {
     value: function(require) {
-        var kity = _p.r(41), ScriptController = _p.r(46);
+        var kity = _p.r(43), ScriptController = _p.r(48);
         return kity.createClass("ScriptOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function(operatorName) {
                 this.callBase(operatorName || "Script");
             },
@@ -5974,11 +6015,11 @@ _p[56] = {
 /**
  * 求和操作符：∑
  */
-_p[57] = {
+_p[59] = {
     value: function(require) {
-        var kity = _p.r(41), ScriptController = _p.r(46);
+        var kity = _p.r(43), ScriptController = _p.r(48);
         return kity.createClass("SummationOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Summation");
                 this.displayType = "equation";
@@ -6021,11 +6062,11 @@ _p[57] = {
 /**
  * 带圈的数字
  */
-_p[58] = {
+_p[60] = {
     value: function(require) {
-        var kity = _p.r(41);
+        var kity = _p.r(43);
         return kity.createClass("TextcircledOperator", {
-            base: _p.r(51),
+            base: _p.r(53),
             constructor: function() {
                 this.callBase("Textcircled");
             },
@@ -6037,13 +6078,85 @@ _p[58] = {
     }
 };
 
+/**
+ * 下支撑操作符
+ */
+_p[61] = {
+    value: function(require) {
+        var kity = _p.r(43), signData = [ // left
+        "M19.505,10.369H9.577c-2.88,0-7.489-1.872-7.993-9.721C1.512,0.288,1.224,0,0.792,0C0,0,0,0.576,0,1.368   c0,7.201,3.672,13.753,9.001,13.825h10.504V10.369z", // middle
+        "M22.699,5.041c0.792-0.216,0.936-0.216,3.528-0.216h4.607C30.822,3.215,30.822,1.606,30.861,0h-5.713   c-3.313,0-4.537,0.576-6.841,2.88c-1.512,1.512-2.232,3.601-2.808,5.617C13.842,2.592,10.53,0,6.354,0H0v4.825h4.914   c2.808,0,5.112,0,7.489,2.88c2.088,2.52,2.232,5.256,2.304,6.84c0.072,0.36,0.36,0.648,0.792,0.648c0.72,0,0.72-0.432,0.792-1.152   C16.579,9.289,19.171,5.833,22.699,5.041z", // right
+        "M18.096,1.152c-0.288,4.537-2.592,8.065-6.265,9.001c-0.648,0.216-0.792,0.216-3.384,0.216H0.032   c-0.038,1.606-0.038,3.216-0.023,4.825h8.653c3.024,0,5.329,0,8.065-3.457c2.16-2.808,2.952-7.561,2.952-10.369   c0-0.792,0-1.368-0.792-1.368C18.167,0,18.167,0.432,18.096,1.152z" ];
+        return kity.createClass("UnderbraceOperator", {
+            base: _p.r(53),
+            constructor: function() {
+                this.callBase("Underbrace");
+            },
+            applyOperand: function(up, down) {
+                var upBox = up.getFixRenderBox(), downBox = down.getFixRenderBox(), opShape = this.getOperatorShape(upBox.width), opBox = opShape.getFixRenderBox(), offset = 0, maxWidth = Math.max(upBox.width, downBox.width, opBox.width);
+                up.translate((maxWidth - upBox.width) / 2, offset);
+                offset += upBox.height + 5;
+                opShape.translate((maxWidth - opBox.width) / 2, offset);
+                offset += opBox.height;
+                down.translate((maxWidth - downBox.width) / 2, offset);
+            },
+            getOperatorShape: function(width) {
+                var lineWidth = 5, diff = 2, length = width < 73 ? 5 : 5 + ((width - 73) / 2 | 0) + 1, offset = 0, shape1 = new kity.Path(signData[0]).fill("black"), shape2 = new kity.Path(signData[1]).fill("black"), shape3 = new kity.Path(signData[2]).fill("black"), leftLine = new kity.Rect(length, lineWidth).fill("black"), rightLine = new kity.Rect(length, lineWidth).fill("black"), box = [], group = new kity.Group();
+                group.addShape(shape1);
+                group.addShape(shape2);
+                group.addShape(shape3);
+                group.addShape(leftLine);
+                group.addShape(rightLine);
+                this.addOperatorShape(group);
+                box[0] = shape1.getFixRenderBox();
+                box[1] = shape2.getFixRenderBox();
+                var point = box[0].height - lineWidth;
+                shape1.translate(0, 0);
+                offset += box[0].width - diff;
+                leftLine.translate(offset, point);
+                offset += length - diff;
+                shape2.translate(offset, point);
+                offset += box[1].width - diff;
+                rightLine.translate(offset, point);
+                offset += length - diff;
+                shape3.translate(offset, 0);
+                return group;
+            }
+        });
+    }
+};
+
+/**
+ * 小括号操作符：()
+ */
+_p[62] = {
+    value: function(require) {
+        var kity = _p.r(43);
+        return kity.createClass("WideparenOperator", {
+            base: _p.r(53),
+            constructor: function() {
+                this.callBase("Wideparen");
+            },
+            applyOperand: function(exp) {
+                var pathData = "M0.527,7.805H0c0.727-1.43,1.57-2.619,2.531-3.568c1.359-1.359,2.971-2.405,4.834-3.138S11.156,0,13.148,0   c2.93,0,5.599,0.721,8.007,2.162s4.134,3.322,5.177,5.643h-0.598c-0.645-1.16-1.523-2.112-2.637-2.856s-2.522-1.301-4.228-1.67   s-3.489-0.554-5.353-0.554c-2.016,0-3.85,0.158-5.502,0.475C6.715,3.434,5.672,3.727,4.887,4.078S3.346,4.901,2.619,5.493   S1.195,6.855,0.527,7.805z", opShape = new kity.Path(pathData).fill("black"), expBox = exp.getFixRenderBox(), opBox = null, scale = 0;
+                this.addOperatorShape(opShape);
+                opBox = opShape.getFixRenderBox();
+                scale = expBox.width / opBox.width;
+                opShape.scale(scale, 1 + scale / 20);
+                opBox = opShape.getFixRenderBox();
+                exp.translate(0, opBox.height);
+            }
+        });
+    }
+};
+
 /*!
  * 资源管理器
  * 负责管理资源的加载，并在资源ready之后提供Formula构造器
  */
-_p[59] = {
+_p[63] = {
     value: function(require) {
-        var kity = _p.r(41), cbList = [], RES_CONF = _p.r(61).resource, FontInstall = _p.r(31), Formula = _p.r(38), // 资源管理器就绪状态
+        var kity = _p.r(43), cbList = [], RES_CONF = _p.r(65).resource, FontInstall = _p.r(33), Formula = _p.r(40), // 资源管理器就绪状态
         __readyState = false, // 资源管理器是否已启动
         inited = false;
         return {
@@ -6092,9 +6205,9 @@ _p[59] = {
  * 所有符号的基类
  * @abstract
  */
-_p[60] = {
+_p[64] = {
     value: function(require) {
-        var kity = _p.r(41), GTYPE = _p.r(6);
+        var kity = _p.r(43), GTYPE = _p.r(6);
         return kity.createClass("SignGroup", {
             base: kity.Group,
             constructor: function() {
@@ -6136,7 +6249,7 @@ _p[60] = {
 /*!
  * 系统项目配置文件.
  */
-_p[61] = {
+_p[65] = {
     value: function(require) {
         return {
             zoom: .66,
@@ -6145,7 +6258,7 @@ _p[61] = {
                 baseline: Math.round(800 / 1e3 * 50),
                 baseHeight: 50,
                 // 系统字体列表
-                list: [ _p.r(36), _p.r(34), _p.r(35), _p.r(33), _p.r(37) ]
+                list: [ _p.r(38), _p.r(36), _p.r(37), _p.r(35), _p.r(39) ]
             },
             /*------------------------- 资源配置*/
             resource: {
@@ -6165,17 +6278,17 @@ _p[61] = {
 /*!
  * 启动代码
  */
-_p[62] = {
+_p[66] = {
     value: function(require) {
         window.kf = {
             // base
-            ResourceManager: _p.r(59),
-            Operator: _p.r(51),
+            ResourceManager: _p.r(63),
+            Operator: _p.r(53),
             // expression
-            Expression: _p.r(28),
-            CompoundExpression: _p.r(26),
-            TextExpression: _p.r(29),
-            EmptyExpression: _p.r(27),
+            Expression: _p.r(30),
+            CompoundExpression: _p.r(28),
+            TextExpression: _p.r(31),
+            EmptyExpression: _p.r(29),
             CombinationExpression: _p.r(14),
             FunctionExpression: _p.r(16),
             FractionExpression: _p.r(15),
@@ -6192,14 +6305,16 @@ _p[62] = {
             PmodExpression: _p.r(20),
             OverlineExpression: _p.r(19),
             ArrayExpression: _p.r(8),
+            WideparenExpression: _p.r(27),
             // Brackets expressoin
-            BracketsExpression: _p.r(12)
+            BracketsExpression: _p.r(12),
+            UnderbraceExpression: _p.r(26)
         };
     }
 };
 
 var moduleMapping = {
-    "kf.start": 62
+    "kf.start": 66
 };
 
 function use(name) {

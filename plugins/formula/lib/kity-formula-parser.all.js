@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Parser - v1.0.0 - 2014-09-08
+ * Kity Formula Parser - v1.0.0 - 2014-10-15
  * https://github.com/HanCong03/kityformula-editor
  * GitHub: https://github.com/kitygraph/kityformula-editor.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -81,7 +81,7 @@ _p[0] = {
             cursorLocation = [], operand = tree.operand || [], constructor = null, ConstructorProxy;
             objTree.operand = [];
             // 文本表达式已经不需要再处理了
-            if (tree.name.indexOf("text") === -1) {
+            if (tree.name && tree.name.indexOf("text") === -1) {
                 // 处理操作数
                 for (var i = 0, len = operand.length; i < len; i++) {
                     currentOperand = operand[i];
@@ -270,7 +270,7 @@ _p[2] = {
  */
 _p[3] = {
     value: function(require) {
-        var mergeHandler = _p.r(14), Utils = _p.r(4);
+        var mergeHandler = _p.r(15), Utils = _p.r(4);
         function generateTree(units) {
             var currentUnit = null, tree = [];
             for (var i = 0, len = units.length; i < len; i++) {
@@ -297,7 +297,7 @@ _p[3] = {
  */
 _p[4] = {
     value: function(require) {
-        var OPERATOR_LIST = _p.r(7), FUNCTION_LIST = _p.r(6), FUNCTION_HANDLER = _p.r(17), Utils = {
+        var OPERATOR_LIST = _p.r(7), FUNCTION_LIST = _p.r(6), FUNCTION_HANDLER = _p.r(18), Utils = {
             // 根据输入的latex字符串， 检测出该字符串所对应的kf的类型
             getLatexType: function(str) {
                 str = str.replace(/^\\/, "");
@@ -323,10 +323,16 @@ _p[4] = {
                     handler: FUNCTION_HANDLER
                 };
             },
-            getCasesDefine: function(count) {
+            getCasesDefine: function(params) {
                 return Utils.extend({
-                    params: count
+                    params: params
                 }, OPERATOR_LIST.cases);
+            },
+            getArrayDefine: function(colCount, rowCount) {
+                return Utils.extend({
+                    colCount: colCount,
+                    rowCount: rowCount
+                }, OPERATOR_LIST.array);
             },
             getBracketsDefine: function(leftBrackets, rightBrackets) {
                 return Utils.extend({
@@ -412,7 +418,7 @@ _p[6] = {
  */
 _p[7] = {
     value: function(require) {
-        var scriptHandler = _p.r(28), TYPE = _p.r(11);
+        var scriptHandler = _p.r(29), TYPE = _p.r(11);
         return {
             "^": {
                 name: "superscript",
@@ -428,107 +434,123 @@ _p[7] = {
                 name: "fraction",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(16)
+                handler: _p.r(17)
             },
             dfrac: {
                 name: "fraction",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(15)
+                handler: _p.r(16)
             },
             sqrt: {
                 name: "radical",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(29)
+                handler: _p.r(30)
             },
             sum: {
                 name: "summation",
                 type: TYPE.FN,
                 traversal: "rtl",
-                handler: _p.r(30)
+                handler: _p.r(31)
             },
             "int": {
                 name: "integration",
                 type: TYPE.FN,
                 traversal: "rtl",
-                handler: _p.r(19)
+                handler: _p.r(20)
             },
             brackets: {
                 name: "brackets",
                 type: TYPE.FN,
-                handler: _p.r(12)
+                handler: _p.r(13)
             },
             cases: {
                 name: "cases",
                 type: TYPE.FN,
-                handler: _p.r(13)
+                handler: _p.r(14)
+            },
+            array: {
+                name: "array",
+                type: TYPE.FN,
+                handler: _p.r(12)
             },
             mathcal: {
                 name: "mathcal",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(22)
+                handler: _p.r(23)
+            },
+            wideparen: {
+                name: "wideparen",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(34)
+            },
+            underbrace: {
+                name: "underbrace",
+                type: TYPE.FN,
+                handler: _p.r(33)
             },
             mathfrak: {
                 name: "mathfrak",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(23)
+                handler: _p.r(24)
             },
             mathbb: {
                 name: "mathbb",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(21)
+                handler: _p.r(22)
             },
             mathrm: {
                 name: "mathrm",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(24)
+                handler: _p.r(25)
             },
             hat: {
                 name: "hat",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(18)
+                handler: _p.r(19)
             },
             vec: {
                 name: "vec",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(18)
+                handler: _p.r(19)
             },
             widehat: {
                 name: "widehat",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(18)
+                handler: _p.r(19)
             },
             textcircled: {
                 name: "textcircled",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(31)
+                handler: _p.r(32)
             },
             prod: {
                 name: "product",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(27)
+                handler: _p.r(28)
             },
             pmod: {
                 name: "pmod",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(26)
+                handler: _p.r(27)
             },
             overline: {
                 name: "overline",
                 type: TYPE.FN,
                 sign: false,
-                handler: _p.r(25)
+                handler: _p.r(26)
             }
         };
     }
@@ -541,9 +563,9 @@ _p[8] = {
     value: function(require) {
         return {
             // 积分预处理器
-            "int": _p.r(33),
+            "int": _p.r(36),
             // 引号预处理
-            quot: _p.r(34)
+            quot: _p.r(37)
         };
     }
 };
@@ -554,27 +576,30 @@ _p[8] = {
 _p[9] = {
     value: function(require) {
         return {
-            combination: _p.r(37),
-            fraction: _p.r(38),
-            dfraction: _p.r(38),
-            "function": _p.r(39),
-            integration: _p.r(41),
-            subscript: _p.r(51),
-            superscript: _p.r(53),
-            script: _p.r(49),
-            radical: _p.r(50),
-            summation: _p.r(52),
-            product: _p.r(48),
-            brackets: _p.r(35),
-            mathcal: _p.r(43),
-            mathfrak: _p.r(44),
-            mathbb: _p.r(42),
-            mathrm: _p.r(45),
-            cases: _p.r(36),
-            textcircled: _p.r(54),
-            hat: _p.r(40),
-            pmod: _p.r(47),
-            overline: _p.r(46)
+            combination: _p.r(41),
+            fraction: _p.r(42),
+            dfraction: _p.r(42),
+            "function": _p.r(43),
+            integration: _p.r(45),
+            subscript: _p.r(55),
+            superscript: _p.r(57),
+            script: _p.r(53),
+            radical: _p.r(54),
+            summation: _p.r(56),
+            product: _p.r(52),
+            brackets: _p.r(39),
+            mathcal: _p.r(47),
+            mathfrak: _p.r(48),
+            mathbb: _p.r(46),
+            mathrm: _p.r(49),
+            cases: _p.r(40),
+            textcircled: _p.r(58),
+            hat: _p.r(44),
+            pmod: _p.r(51),
+            overline: _p.r(50),
+            array: _p.r(38),
+            underbrace: _p.r(59),
+            wideparen: _p.r(60)
         };
     }
 };
@@ -611,9 +636,31 @@ _p[11] = {
 };
 
 /*!
- * 括号处理器
+ * array处理器
  */
 _p[12] = {
+    value: function(require) {
+        return function(info, processedStack, unprocessedStack) {
+            var colCount = info.colCount, rowCount = info.rowCount;
+            info.operand = [];
+            for (var i = 0, len = info.colCount * info.rowCount; i < len; i++) {
+                info.operand[i] = unprocessedStack.shift();
+            }
+            info.callFn = {
+                setColNum: [ info.colCount ]
+            };
+            delete info.handler;
+            delete info.colCount;
+            delete info.rowCount;
+            return info;
+        };
+    }
+};
+
+/*!
+ * 括号处理器
+ */
+_p[13] = {
     value: function(require) {
         var BRACKETS_TYPE = _p.r(5);
         return function(info, processedStack, unprocessedStack) {
@@ -635,7 +682,7 @@ _p[12] = {
 /*!
  * cases处理器
  */
-_p[13] = {
+_p[14] = {
     value: function(require) {
         return function(info, processedStack, unprocessedStack) {
             var len = info.params;
@@ -653,7 +700,7 @@ _p[13] = {
 /*!
  * 合并处理(特殊处理函数)
  */
-_p[14] = {
+_p[15] = {
     value: function() {
         return function() {
             return {
@@ -667,7 +714,7 @@ _p[14] = {
 /*!
  * 分数函数处理器
  */
-_p[15] = {
+_p[16] = {
     value: function() {
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
@@ -696,7 +743,7 @@ _p[15] = {
 /*!
  * 分数函数处理器
  */
-_p[16] = {
+_p[17] = {
     value: function() {
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
@@ -722,9 +769,9 @@ _p[16] = {
 /*!
  * 函数表达式处理器
  */
-_p[17] = {
+_p[18] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(20);
+        var ScriptExtractor = _p.r(21);
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
             var params = ScriptExtractor.exec(unprocessedStack);
@@ -742,7 +789,7 @@ _p[17] = {
 /*!
  * 分数函数处理器
  */
-_p[18] = {
+_p[19] = {
     value: function() {
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
@@ -761,9 +808,9 @@ _p[18] = {
 /*!
  * 积分函数处理器
  */
-_p[19] = {
+_p[20] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
+        var ScriptExtractor = _p.r(21), FN_TYPE = _p.r(11).FN;
         return function(info, processedStack, unprocessedStack) {
             var count = unprocessedStack.shift(), params = ScriptExtractor.exec(unprocessedStack);
             if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
@@ -783,7 +830,7 @@ _p[19] = {
 /*!
  * 通用上下标提取器
  */
-_p[20] = {
+_p[21] = {
     value: function() {
         return {
             exec: function(stack) {
@@ -835,7 +882,7 @@ _p[20] = {
 /*!
  * 双线处理
  */
-_p[21] = {
+_p[22] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -859,7 +906,7 @@ _p[21] = {
 /*!
  * 手写体处理
  */
-_p[22] = {
+_p[23] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -883,7 +930,7 @@ _p[22] = {
 /*!
  * 花体处理
  */
-_p[23] = {
+_p[24] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -907,7 +954,7 @@ _p[23] = {
 /*!
  * 罗马处理
  */
-_p[24] = {
+_p[25] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var chars = unprocessedStack.shift();
@@ -931,7 +978,7 @@ _p[24] = {
 /*!
  * overline 上划线
  */
-_p[25] = {
+_p[26] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var expr = unprocessedStack.shift();
@@ -945,7 +992,7 @@ _p[25] = {
 /*!
  * pmod
  */
-_p[26] = {
+_p[27] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var expr = unprocessedStack.shift();
@@ -959,9 +1006,9 @@ _p[26] = {
 /*!
  * 连乘函数处理器
  */
-_p[27] = {
+_p[28] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
+        var ScriptExtractor = _p.r(21), FN_TYPE = _p.r(11).FN;
         return function(info, processedStack, unprocessedStack) {
             var params = ScriptExtractor.exec(unprocessedStack);
             if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
@@ -977,7 +1024,7 @@ _p[27] = {
 /*!
  * 上下标操作符函数处理
  */
-_p[28] = {
+_p[29] = {
     value: function() {
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
@@ -1011,9 +1058,9 @@ _p[28] = {
 /*!
  * 方根函数处理器
  */
-_p[29] = {
+_p[30] = {
     value: function(require) {
-        var mergeHandler = _p.r(14);
+        var mergeHandler = _p.r(15);
         // 处理函数接口
         return function(info, processedStack, unprocessedStack) {
             var exponent = unprocessedStack.shift(), tmp = null, // 被开方数
@@ -1046,9 +1093,9 @@ _p[29] = {
 /*!
  * 求和函数处理器
  */
-_p[30] = {
+_p[31] = {
     value: function(require) {
-        var ScriptExtractor = _p.r(20), FN_TYPE = _p.r(11).FN;
+        var ScriptExtractor = _p.r(21), FN_TYPE = _p.r(11).FN;
         return function(info, processedStack, unprocessedStack) {
             var params = ScriptExtractor.exec(unprocessedStack);
             if (params.expr && params.expr.type === FN_TYPE && params.expr.handler && params.expr.name === "integration") {
@@ -1064,7 +1111,7 @@ _p[30] = {
 /*!
  * 带圈的数字
  */
-_p[31] = {
+_p[32] = {
     value: function() {
         return function(info, processedStack, unprocessedStack) {
             var char = unprocessedStack.shift();
@@ -1078,13 +1125,37 @@ _p[31] = {
     }
 };
 
+/*!
+ * 下支撑结构处理器
+ */
+_p[33] = {
+    value: function(require) {
+        return function(info, processedStack, unprocessedStack) {
+            info.operand = [ unprocessedStack.shift(), unprocessedStack.shift() ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
+_p[34] = {
+    value: function() {
+        return function(info, processedStack, unprocessedStack) {
+            var expr = unprocessedStack.shift();
+            info.operand = [ expr ];
+            delete info.handler;
+            return info;
+        };
+    }
+};
+
 /**
  * Kity Formula Latex解析器实现
  */
 /* jshint forin: false */
-_p[32] = {
+_p[35] = {
     value: function(require) {
-        var Parser = _p.r(56).Parser, LatexUtils = _p.r(1), PRE_HANDLER = _p.r(8), serialization = _p.r(55), OP_DEFINE = _p.r(7), REVERSE_DEFINE = _p.r(9), SPECIAL_LIST = _p.r(10), Utils = _p.r(4);
+        var Parser = _p.r(62).Parser, LatexUtils = _p.r(1), PRE_HANDLER = _p.r(8), serialization = _p.r(61), OP_DEFINE = _p.r(7), REVERSE_DEFINE = _p.r(9), SPECIAL_LIST = _p.r(10), Utils = _p.r(4);
         // data
         var leftChar = "￸", rightChar = "￼", splitChar = "﻿", clearCharPattern = new RegExp(leftChar + "|" + rightChar, "g"), leftCharPattern = new RegExp(leftChar, "g"), rightCharPattern = new RegExp(rightChar, "g");
         Parser.register("latex", Parser.implement({
@@ -1252,8 +1323,11 @@ _p[32] = {
                 return groupStack[0];
             },
             parseToStruct: function(units) {
-                var structs = [], tmp = null, j = 0, casesGroup = null, casesUnits = null;
+                var structs = [], tmp = null, rows = [], j = 0, casesGroup = null, casesUnits = null;
                 for (var i = 0, len = units.length; i < len; i++) {
+                    if (units[i] === null) {
+                        continue;
+                    }
                     if (Utils.isArray(units[i])) {
                         if (units[i].type === "brackets") {
                             // 处理自动调整大小的括号组
@@ -1281,10 +1355,55 @@ _p[32] = {
                             for (var i = 0, len = casesGroup.length; i < len; i++) {
                                 structs.push(this.parseToStruct(casesGroup[i]));
                             }
+                        } else if (units[i].type === "begin" && units[i].beginType === "array") {
+                            tmp = [];
+                            j = 0;
+                            casesGroup = [];
+                            casesUnits = units[i];
+                            // 剔除对齐信息
+                            casesUnits.shift();
+                            rows = [];
+                            var index = 0;
+                            i++;
+                            while (casesUnits[j]) {
+                                if (casesUnits[j] === "\\\\") {
+                                    if (!tmp[index]) {
+                                        tmp[index] = [];
+                                    }
+                                    tmp[index].push(this.parseToStruct(rows));
+                                    index = 0;
+                                    rows = [];
+                                } else if (casesUnits[j] === "&") {
+                                    if (!tmp[index]) {
+                                        tmp[index] = [];
+                                    }
+                                    tmp[index].push(this.parseToStruct(rows));
+                                    index++;
+                                    rows = [];
+                                } else {
+                                    rows.push(casesUnits[j]);
+                                }
+                                j++;
+                            }
+                            if (!tmp[index]) {
+                                tmp[index] = [];
+                            }
+                            tmp[index].push(this.parseToStruct(rows));
+                            casesGroup = tmp;
+                            structs.push(Utils.getArrayDefine(casesGroup.length, casesGroup[0].length));
+                            for (var i = 0, len = casesGroup[0].length; i < len; i++) {
+                                for (var j = 0, jlen = casesGroup.length; j < jlen; j++) {
+                                    structs.push(casesGroup[j][i]);
+                                }
+                            }
                         } else {
                             // 普通组
                             structs.push(this.parseToStruct(units[i]));
                         }
+                    } else if (units[i] === "\\underbrace") {
+                        // 跳过underbrace中的下标符号
+                        structs.push(parseStruct(units[i]));
+                        units[i + 2] = null;
                     } else {
                         tmp = parseStruct(units[i]);
                         if (tmp) {
@@ -1342,7 +1461,7 @@ _p[32] = {
 /**
  * “开方”预处理器
  */
-_p[33] = {
+_p[36] = {
     value: function() {
         return function(input) {
             return input.replace(/\\(i+)nt(\b|[^a-zA-Z])/g, function(match, sign, suffix) {
@@ -1355,7 +1474,7 @@ _p[33] = {
 /**
  * “双引号”预处理器
  */
-_p[34] = {
+_p[37] = {
     value: function() {
         return function(input) {
             return input.replace(/``/g, "“");
@@ -1364,9 +1483,30 @@ _p[34] = {
 };
 
 /*!
+ * 逆解析处理函数: cases
+ */
+_p[38] = {
+    value: function() {
+        /**
+     * operands
+     */
+        return function(operands) {
+            var colCount = this.callFn.setColNum[0], rowCount = operands.length / colCount, ops = [], align = [];
+            for (var i = 0; i < colCount; i++) {
+                align[i] = "c";
+            }
+            for (var i = 0; i < rowCount; i++) {
+                ops[i] = operands.slice(i * colCount, (i + 1) * colCount).join("&");
+            }
+            return [ "\\begin{array}", "{" + align.join("") + "}", ops.join(" \\\\ "), "\\end{array}" ].join(" ");
+        };
+    }
+};
+
+/*!
  * 逆解析处理函数: brackets
  */
-_p[35] = {
+_p[39] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1389,7 +1529,7 @@ _p[35] = {
 /*!
  * 逆解析处理函数: cases
  */
-_p[36] = {
+_p[40] = {
     value: function() {
         /**
      * operands
@@ -1411,7 +1551,7 @@ _p[36] = {
 /*!
  * 逆解析处理函数：combination
  */
-_p[37] = {
+_p[41] = {
     value: function() {
         return function(operands) {
             if (this.attr["data-root"] || this.attr["data-placeholder"]) {
@@ -1425,7 +1565,7 @@ _p[37] = {
 /*!
  * 逆解析处理函数: fraction
  */
-_p[38] = {
+_p[42] = {
     value: function() {
         return function(operands) {
             if (this.callFn) {
@@ -1440,7 +1580,7 @@ _p[38] = {
 /*!
  * 逆解析处理函数: func
  */
-_p[39] = {
+_p[43] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1469,7 +1609,7 @@ _p[39] = {
 /*!
  * 逆解析处理函数: textcircled
  */
-_p[40] = {
+_p[44] = {
     value: function() {
         return function(operands) {
             var name = this.callFn.setType[0];
@@ -1481,7 +1621,7 @@ _p[40] = {
 /*!
  * 逆解析处理函数: integration
  */
-_p[41] = {
+_p[45] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1517,7 +1657,7 @@ _p[41] = {
 /*!
  * 逆解析处理函数: mathbb
  */
-_p[42] = {
+_p[46] = {
     value: function() {
         return function(operands) {
             return "\\mathbb{" + operands[0] + "}";
@@ -1528,7 +1668,7 @@ _p[42] = {
 /*!
  * 逆解析处理函数: mathcal
  */
-_p[43] = {
+_p[47] = {
     value: function() {
         return function(operands) {
             return "\\mathcal{" + operands[0] + "}";
@@ -1539,7 +1679,7 @@ _p[43] = {
 /*!
  * 逆解析处理函数: mathfrak
  */
-_p[44] = {
+_p[48] = {
     value: function() {
         return function(operands) {
             return "\\mathfrak{" + operands[0] + "}";
@@ -1550,7 +1690,7 @@ _p[44] = {
 /*!
  * 逆解析处理函数: mathcal
  */
-_p[45] = {
+_p[49] = {
     value: function() {
         return function(operands) {
             return "\\mathrm{" + operands[0] + "}";
@@ -1561,7 +1701,7 @@ _p[45] = {
 /*!
  * 逆解析处理函数: overline
  */
-_p[46] = {
+_p[50] = {
     value: function() {
         return function(operands) {
             operands = operands[0];
@@ -1576,7 +1716,7 @@ _p[46] = {
 /*!
  * 逆解析处理函数: pmod
  */
-_p[47] = {
+_p[51] = {
     value: function() {
         return function(operands) {
             operands = operands[0];
@@ -1591,7 +1731,7 @@ _p[47] = {
 /*!
  * 逆解析处理函数: product
  */
-_p[48] = {
+_p[52] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1619,7 +1759,7 @@ _p[48] = {
 /*!
  * 逆解析处理函数: script
  */
-_p[49] = {
+_p[53] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1636,7 +1776,7 @@ _p[49] = {
 /*!
  * 逆解析处理函数: sqrt
  */
-_p[50] = {
+_p[54] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1658,7 +1798,7 @@ _p[50] = {
 /*!
  * 逆解析处理函数: subscript
  */
-_p[51] = {
+_p[55] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1674,7 +1814,7 @@ _p[51] = {
 /*!
  * 逆解析处理函数: summation
  */
-_p[52] = {
+_p[56] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1702,7 +1842,7 @@ _p[52] = {
 /*!
  * 逆解析处理函数: superscript
  */
-_p[53] = {
+_p[57] = {
     value: function() {
         /**
      * operands中元素对照表
@@ -1718,7 +1858,7 @@ _p[53] = {
 /*!
  * 逆解析处理函数: textcircled
  */
-_p[54] = {
+_p[58] = {
     value: function() {
         return function(operands) {
             return "\\textcircled{" + operands[0] + "}";
@@ -1726,10 +1866,32 @@ _p[54] = {
     }
 };
 
+/*!
+ * 逆解析处理函数: underbrace
+ */
+_p[59] = {
+    value: function() {
+        /**
+     * operands
+     */
+        return function(operands) {
+            return [ "\\underbrace", operands[0] + "_" + operands[1] ].join(" ");
+        };
+    }
+};
+
+_p[60] = {
+    value: function() {
+        return function(operands) {
+            return "\\wideparen " + operands[0];
+        };
+    }
+};
+
 /**
  * Created by hn on 14-3-20.
  */
-_p[55] = {
+_p[61] = {
     value: function(require) {
         var reverseHandlerTable = _p.r(9), SPECIAL_LIST = _p.r(10), specialCharPattern = /(\\(?:[\w]+)|(?:[^a-z]))\\/gi;
         return function(tree, options) {
@@ -1774,7 +1936,7 @@ _p[55] = {
 /*!
  * Kity Formula 公式表示法Parser接口
  */
-_p[56] = {
+_p[62] = {
     value: function(require, exports, module) {
         // Parser 配置列表
         var CONF = {}, IMPL_POLL = {}, // 内部简单工具类
@@ -1922,18 +2084,18 @@ _p[56] = {
 /*!
  * 启动模块
  */
-_p[57] = {
+_p[63] = {
     value: function(require) {
-        var Parser = _p.r(56).Parser;
+        var Parser = _p.r(62).Parser;
         // 初始化组件
-        _p.r(32);
+        _p.r(35);
         window.kf.Parser = Parser;
         window.kf.Assembly = _p.r(0);
     }
 };
 
 var moduleMapping = {
-    "kf.start": 57
+    "kf.start": 63
 };
 
 function use(name) {
