@@ -77,7 +77,7 @@
 
             var factory = kf.EditorFactory.create( $( "#eidotr" )[ 0 ], {
                     render: {
-                        fontsize: 40
+                        fontsize: 18
                     },
                     resource: {
                         path: "../resource/"
@@ -155,7 +155,7 @@
 
             for ( var i = 0, len = hash.length; i < len; i++ ) {
                 tmp = hash[ i ].split( '=', 2 );
-                hashParams[ tmp[ 0 ] ] = tmp[ 1 ];
+                hashParams[ tmp[ 0 ] ] = decodeURIComponent( tmp[ 1 ] );
             }
 
             return hashParams;

@@ -29,7 +29,7 @@
                     var src = '../plugins/formula/page/index.html';
 
                     if ( editor.__kf_cache ) {
-                        src += '#source=' + editor.__kf_cache.source;
+                        src += '#source=' + encodeURIComponent( editor.__kf_cache.source );
                     }
 
                     if ( !editor.__kfEditorFrame ) {

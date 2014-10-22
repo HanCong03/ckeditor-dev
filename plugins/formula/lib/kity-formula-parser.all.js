@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Parser - v1.0.0 - 2014-10-15
+ * Kity Formula Parser - v1.0.0 - 2014-10-22
  * https://github.com/HanCong03/kityformula-editor
  * GitHub: https://github.com/kitygraph/kityformula-editor.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -366,7 +366,14 @@ _p[5] = {
             "]": t,
             "(": t,
             ")": t,
-            "|": t
+            "|": t,
+            ".": t,
+            "\\langle": t,
+            "\\rangle": t,
+            "\\lfloor": t,
+            "\\rfloor": t,
+            "\\lceil": t,
+            "\\rceil": t
         };
     }
 };
@@ -522,6 +529,12 @@ _p[7] = {
                 sign: false,
                 handler: _p.r(19)
             },
+            overrightarrow: {
+                name: "overrightarrow",
+                type: TYPE.FN,
+                sign: false,
+                handler: _p.r(19)
+            },
             widehat: {
                 name: "widehat",
                 type: TYPE.FN,
@@ -668,6 +681,9 @@ _p[13] = {
             for (var i = 0, len = info.params.length; i < len; i++) {
                 if (!(info.params[i] in BRACKETS_TYPE)) {
                     throw new Error("Brackets: invalid params");
+                }
+                if (info.params[i].length > 1) {
+                    info.params[i] += "\\";
                 }
             }
             info.operand = info.params;

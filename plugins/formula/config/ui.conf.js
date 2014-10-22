@@ -382,7 +382,7 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b6-btn-3',
-                            value: '\\langle \\placeholder \\rangle'
+                            value: '\\left \\langle {\\placeholder} \\right \\rangle'
                         },
                         {
                             clazz: 'Button',
@@ -412,7 +412,7 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b6-btn-9',
-                            value: '{\\placeholder}|^{\\placeholder}_{\\placeholder}'
+                            value: '{\\left.{\\placeholder }\\right|}^{\\placeholder }_{\\placeholder }'
                         },
                         {
                             clazz: 'Button',
@@ -571,12 +571,12 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b8-btn-9',
-                            value: '\\wedge'
+                            value: '\\land'
                         },
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b8-btn-10',
-                            value: '\\vee'
+                            value: '\\lor'
                         },
                         {
                             clazz: 'Button',
@@ -608,22 +608,22 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b9-btn-3',
-                            value: '[\\placeholder]'
+                            value: '\\left[\\placeholder\\right]'
                         },
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b9-btn-4',
-                            value: '\\lfloor\\placeholder\\rfloor'
+                            value: '\\left \\lfloor\\placeholder \\right \\rfloor'
                         },
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b9-btn-5',
-                            value: '\\lceil\\placeholder\\rceil'
+                            value: '\\left \\lceil\\placeholder\\right\\rceil'
                         },
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b9-btn-6',
-                            value: '\\vec{\\placeholder}'
+                            value: '\\overrightarrow{\\placeholder}'
                         },
                         {
                             clazz: 'Button',
@@ -633,7 +633,7 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b9-btn-8',
-                            value: '\\hat{\\placeholder}'
+                            value: '\\widehat{\\placeholder}'
                         },
                         {
                             clazz: 'Button',
@@ -695,7 +695,7 @@ var KF_UI_CONFIG = {
                         {
                             clazz: 'Button',
                             className: 'kfe-ui-b10-btn-7',
-                            value: '\\mathrm{Rt}\\Delta'
+                            value: '\\mathrm{Rt}\\triangle'
                         },
                         {
                             clazz: 'Button',

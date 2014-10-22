@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Render - v1.0.0 - 2014-10-15
+ * Kity Formula Render - v1.0.0 - 2014-10-23
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -5204,7 +5204,21 @@ _p[44] = {
  */
 _p[45] = {
     value: function(require) {
-        var kity = _p.r(43), Text = _p.r(5);
+        var kity = _p.r(43), pathData = {
+            "{": "M2.592,33.627c5.04,0.864,8.353,4.176,8.353,10.225v11.665c0,6.553,1.584,9.721,7.417,9.721v1.872   c-8.641,0-11.881-3.457-11.881-11.593V42.556c0-4.824-2.376-6.913-6.48-8.064v-1.873c4.104-1.224,6.48-3.312,6.48-8.137V11.665   C6.48,3.457,9.721,0,18.361,0v1.944c-5.833,0-7.417,3.168-7.417,9.792v11.521c0,5.977-3.313,9.361-8.353,10.153V33.627z",
+            "}": "M11.809,55.517c0,8.137-3.24,11.593-11.809,11.593v-1.872c5.761,0,7.345-3.168,7.345-9.721V43.852   c0-6.049,3.24-9.361,8.353-10.225v-0.216c-5.112-0.792-8.353-4.177-8.353-10.153V11.737c0-6.625-1.584-9.792-7.345-9.792V0   c8.569,0,11.809,3.457,11.809,11.665v12.817c0,4.825,2.448,6.913,6.553,8.137v1.873c-4.104,1.152-6.553,3.24-6.553,8.064V55.517z",
+            "[": "M11.305,67.11H0V0h11.305v1.944H4.392v63.293h6.913V67.11z",
+            "]": "M0,67.11v-1.872h6.984V1.944H0V0h11.305v67.11H0z",
+            "(": "M14.041,71.358C8.641,67.542,0,57.245,0,35.571c0-8.569,1.152-17.138,5.112-24.77C7.272,6.337,10.009,3.168,13.969,0   l1.152,1.512C9.505,6.985,4.752,17.282,4.752,35.571C4.824,54.005,9.505,64.23,15.121,69.846L14.041,71.358z",
+            ")": "M1.224,0c3.888,3.168,6.625,6.337,8.785,10.729c3.672,7.129,5.113,15.266,5.113,24.771c0,8.568-1.152,17.354-5.185,25.13   c-2.16,4.249-5.185,8.137-8.785,10.729L0,69.846c5.617-5.616,10.297-15.841,10.369-34.275C10.369,17.282,5.617,6.985,0,1.512   L1.224,0",
+            "|": "M-1.656,74.958V0h3.313v74.958H-1.656z",
+            "\\langle\\": "M2.952,36.003l12.745,33.411c0.36,0.792,0.36,0.936,0.36,1.152c0,0.792-0.648,1.44-1.44,1.44   c-1.008,0-1.368-0.936-1.656-1.728L0.36,37.228C0,36.363,0,36.219,0,36.003c0-0.432,0.216-0.864,0.36-1.296L12.961,1.656   C13.465,0.36,13.969,0,14.617,0c0.792,0,1.44,0.648,1.44,1.44c0,0.36,0,0.504-0.36,1.296L2.952,36.003z",
+            "\\rangle\\": "M2.952,70.566c-0.288,0.72-0.576,1.44-1.512,1.44c-0.792,0-1.44-0.648-1.44-1.44c0-0.36,0-0.504,0.36-1.296l12.745-33.267   L0.36,2.592C0,1.8,0,1.656,0,1.44C0,0.648,0.648,0,1.44,0s1.224,0.432,1.656,1.656l12.601,33.123c0.36,0.864,0.36,1.008,0.36,1.224   c0,0.216,0,0.36-0.36,1.224L2.952,70.566z",
+            "\\lfloor\\": "M2.592,72.006C0.288,72.006,0,71.718,0,69.414V2.592C0,1.512,0,0,1.439,0c1.44,0,1.44,1.296,1.44,2.592v66.534h12.385   c1.08,0,2.593,0,2.593,1.44c0,1.44-1.513,1.44-2.593,1.44H2.592z",
+            "\\rfloor\\": "M17.858,69.414c0,2.376-0.217,2.592-2.521,2.592H2.593c-1.08,0-2.593,0-2.593-1.44c0-1.44,1.513-1.44,2.593-1.44h12.385   V2.592c0-1.08,0-2.592,1.44-2.592s1.44,1.296,1.44,2.592V69.414z",
+            "\\lceil\\": "M2.88,2.88v66.534c0,1.296,0,2.592-1.44,2.592C0,72.006,0,70.494,0,69.414V2.592C0,0.288,0.288,0,2.592,0h12.673   c1.08,0,2.593,0,2.593,1.44c0,1.44-1.513,1.44-2.593,1.44H2.88z",
+            "\\rceil\\": "M17.858,69.414c0,1.296,0,2.592-1.44,2.592s-1.44-1.512-1.44-2.592V2.88H2.593C1.513,2.88,0,2.88,0,1.44   C0,0,1.513,0,2.593,0h12.745c2.304,0,2.521,0.216,2.521,2.592V69.414z"
+        };
         return kity.createClass("BracketsOperator", {
             base: _p.r(53),
             constructor: function() {
@@ -5215,14 +5229,29 @@ _p[45] = {
             }
         });
         function generate(exp) {
-            var left = this.getParentExpression().getLeftSymbol(), right = this.getParentExpression().getRightSymbol(), fontSize = exp.getFixRenderBox().height, group = new kity.Group(), offset = 0, leftOp = new Text(left, "KF AMS MAIN").fill("black"), rightOp = new Text(right, "KF AMS MAIN").fill("black");
-            leftOp.setFontSize(fontSize);
-            rightOp.setFontSize(fontSize);
-            this.addOperatorShape(group.addShape(leftOp).addShape(rightOp));
-            offset += leftOp.getFixRenderBox().width;
+            var left = this.getParentExpression().getLeftSymbol(), right = this.getParentExpression().getRightSymbol(), expBox = exp.getFixRenderBox(), group = new kity.Group(), leftShape = null, rightShape = null, leftBox = null, rightBox = null, offset = 5, scale = 0;
+            this.addOperatorShape(group);
+            if (left !== ".") {
+                leftShape = new kity.Path(pathData[left]).fill("black");
+                group.addShape(leftShape);
+                leftBox = leftShape.getFixRenderBox();
+                scale = expBox.height / leftBox.height;
+                leftShape.scale(scale > 1 ? 1 : scale, scale);
+                leftBox = leftShape.getFixRenderBox();
+                offset += leftBox.width;
+                offset = Math.floor(offset);
+            }
             exp.translate(offset, 0);
-            offset += exp.getFixRenderBox().width;
-            rightOp.translate(offset, 0);
+            offset += expBox.width + 5;
+            offset = Math.floor(offset);
+            if (right !== ".") {
+                rightShape = new kity.Path(pathData[right]).fill("black");
+                group.addShape(rightShape);
+                rightBox = rightShape.getFixRenderBox();
+                scale = expBox.height / rightBox.height;
+                rightShape.scale(scale > 1 ? 1 : scale, scale);
+                rightShape.translate(offset, 0);
+            }
         }
     }
 };
@@ -5637,7 +5666,6 @@ _p[51] = {
             },
             applyOperand: function(expr) {
                 var exprBox = expr.getFixRenderBox(), opShape = this.getOperatorShape(exprBox.width), padding = 3, opBox = null;
-                this.addOperatorShape(opShape);
                 opBox = opShape.getFixRenderBox();
                 opShape.translate((exprBox.width - opBox.width) / 2, 0);
                 expr.translate(0, opBox.height);
@@ -5645,7 +5673,7 @@ _p[51] = {
                 this.parentExpression.translateElement(padding, padding);
             },
             getOperatorShape: function(width) {
-                var pathData = null;
+                var pathData = null, opShape = null;
                 switch (this.opType) {
                   case "vec":
                     pathData = "M15.103,0.896c0.128,0.896,0.512,1.664,0.96,2.432c0.704,1.024,1.664,1.856,2.816,2.304   c0.448,0.192,0.704,0.448,0.704,0.896c0,0.512-0.256,0.768-0.704,0.96C17.727,8,16.767,8.768,16.063,9.855   c-0.448,0.704-0.832,1.536-0.96,2.368c-0.128,0.768-0.512,0.896-1.344,0.896c-0.576,0-1.024-0.256-1.024-1.024   c0-0.704,0.704-2.88,1.984-4.352H0.96C0.448,7.744,0,6.976,0,6.527C0,6.08,0.448,5.375,0.96,5.375h13.759   c-1.28-1.408-1.984-3.647-1.984-4.352S13.183,0,13.759,0C14.591,0,14.975,0.192,15.103,0.896z";
@@ -5664,8 +5692,28 @@ _p[51] = {
                         pathData = widehatData[2];
                     }
                     break;
+
+                  case "overrightarrow":
+                    return this.getOverrightarrow(width);
                 }
-                return new kity.Path(pathData).fill("black");
+                opShape = new kity.Path(pathData).fill("black");
+                this.addOperatorShape(opShape);
+                return opShape;
+            },
+            getOverrightarrow: function(width) {
+                var group = new kity.Group(), height = 2.4, pathData = "M15.103,0.896c0.128,0.896,0.512,1.664,0.96,2.432c0.704,1.024,1.664,1.856,2.816,2.304   c0.448,0.192,0.704,0.448,0.704,0.896c0,0.512-0.256,0.768-0.704,0.96C17.727,8,16.767,8.768,16.063,9.855   c-0.448,0.704-0.832,1.536-0.96,2.368c-0.128,0.768-0.512,0.896-1.344,0.896c-0.576,0-1.024-0.256-1.024-1.024   c0-0.704,0.704-2.88,1.984-4.352H0.96C0.448,7.744,0,6.976,0,6.527C0,6.08,0.448,5.375,0.96,5.375h13.759   c-1.28-1.408-1.984-3.647-1.984-4.352S13.183,0,13.759,0C14.591,0,14.975,0.192,15.103,0.896z", arrowShape = new kity.Path(pathData).fill("black"), lineShape = new kity.Rect(0, height).fill("black"), box = null;
+                group.addShape(arrowShape);
+                group.addShape(lineShape);
+                this.addOperatorShape(group);
+                box = arrowShape.getFixRenderBox();
+                width = width - box.width;
+                width += 2;
+                if (width > 0) {
+                    lineShape.setWidth(width);
+                    arrowShape.translate(width - 2, 0);
+                    lineShape.translate(0, (box.height - height) / 2);
+                }
+                return group;
             }
         });
     }
