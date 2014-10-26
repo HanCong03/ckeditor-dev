@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-09-29
+ * Kity Formula Editor - v1.0.0 - 2014-10-26
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -536,9 +536,10 @@ _p[7] = {
                 }
             },
             newLine: function() {
-                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin\{cases\}[\s\S]*?\\end\{cases\}/gi, rootShape = null, originString = latexInfo.str;
+                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin[\s\S]*?\\end/gi, pattern = /\\begin\{([^}]+)\}[\s\S]*?\\end\{\1\}/gi, rootShape = null, beginType = null, content = null, originString = latexInfo.str;
                 while (match = pattern.exec(originString)) {
                     index = match.index;
+                    beginType = match[1];
                     match = match[0];
                     if (match.indexOf(CURSOR_CHAR) === -1) {
                         match = null;
@@ -551,16 +552,25 @@ _p[7] = {
                     return;
                 }
                 source = originString.substring(index, match.length + index);
-                source = source.replace("\\begin{cases}", "").replace("\\end{cases}", "");
+                source = source.replace("\\begin{" + beginType + "}", "").replace("\\end{" + beginType + "}", "");
                 source = source.split("\\\\");
                 for (var i = 0, len = source.length; i < len; i++) {
                     if (source[i].indexOf(CURSOR_CHAR) !== -1) {
+                        content = source[i];
                         source[i] = source[i].replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
-                        source.splice(i + 1, 0, CURSOR_CHAR + " \\placeholder " + CURSOR_CHAR);
+                        content = content.split("&");
+                        for (var j = 0, jlen = content.length; j < jlen; j++) {
+                            if (content[j].indexOf(CURSOR_CHAR) !== -1) {
+                                content[j] = CURSOR_CHAR + " \\placeholder " + CURSOR_CHAR;
+                            } else {
+                                content[j] = "\\placeholder";
+                            }
+                        }
+                        source.splice(i + 1, 0, content.join("&"));
                         break;
                     }
                 }
-                source = "\\begin{cases}" + source.join("\\\\") + "\\end{cases}";
+                source = "\\begin{" + beginType + "}" + source.join("\\\\") + "\\end{" + beginType + "}";
                 originString = originString.substring(0, index) + source + originString.substring(index + match.length);
                 this.inputBox.value = originString;
                 this.inputBox.selectionStart = originString.indexOf(CURSOR_CHAR);
@@ -2126,15 +2136,12 @@ _p[29] = {
      * @returns {boolean}
      */
         function onlyPlaceholder(operands) {
-            var result = 1;
-            if (operands.length > 3) {
+            var result = operands.length;
+            if (result > 3) {
                 return false;
             }
             for (var i = 0, len = operands.length; i < len; i++) {
-                if (operands[i] === CURSOR_CHAR) {
-                    continue;
-                }
-                if (operands[i] && operands[i].name === "placeholder") {
+                if (operands[i] === CURSOR_CHAR || operands[i].name === "placeholder") {
                     result--;
                 }
             }
@@ -2994,7 +3001,7 @@ _p[35] = {
                             startOffset: groupInfo.content.length - 1,
                             endOffset: groupInfo.content.length
                         };
-                    } else if (isContainerNode(groupElement) && groupInfo.content.length === 1) {
+                    } else if (isContainerNode(groupElement) && groupInfo.content.length >= 1) {
                         return locateLeftIndex(moveComponent, groupElement);
                     }
                     return {
@@ -3040,21 +3047,29 @@ _p[35] = {
                 }
                 // 如果父组是一个容器， 并且该容器包含不止一个节点， 则跳到父组开头
                 if (isContainerNode(outerGroupInfo.group.groupObj) && outerGroupInfo.group.content.length > 1) {
-                    return {
-                        groupId: outerGroupInfo.group.id,
-                        startOffset: 0,
-                        endOffset: 0
-                    };
+                    if (outerGroupInfo.index !== 0) {
+                        return {
+                            groupId: outerGroupInfo.group.id,
+                            startOffset: 0,
+                            endOffset: 0
+                        };
+                    }
                 }
                 outerGroupInfo = kfEditor.requestService("position.get.parent.info", outerGroupInfo.group.groupObj);
             }
-            // 如果外部组是容器， 则直接定位即可
+            // 如果外部组是容器
             if (isContainerNode(outerGroupInfo.group.groupObj)) {
-                return {
-                    groupId: outerGroupInfo.group.id,
-                    startOffset: outerGroupInfo.index,
-                    endOffset: outerGroupInfo.index
-                };
+                var target = outerGroupInfo.group.content[outerGroupInfo.index - 1];
+                // 如果内部元素不是一个容器，则直接定位即可
+                if (!isContainerNode(target)) {
+                    return {
+                        groupId: outerGroupInfo.group.id,
+                        startOffset: outerGroupInfo.index,
+                        endOffset: outerGroupInfo.index
+                    };
+                } else {
+                    return locateLeftIndex(moveComponent, target);
+                }
             }
             groupNode = outerGroupInfo.group.content[outerGroupInfo.index - 1];
             // 定位到的组是一个容器， 则定位到容器尾部
@@ -3147,11 +3162,13 @@ _p[35] = {
                 }
                 // 如果父组是一个容器， 并且该容器包含不止一个节点， 则跳到父组末尾
                 if (isContainerNode(outerGroupInfo.group.groupObj) && outerGroupInfo.group.content.length > 1) {
-                    return {
-                        groupId: outerGroupInfo.group.id,
-                        startOffset: outerGroupInfo.group.content.length,
-                        endOffset: outerGroupInfo.group.content.length
-                    };
+                    if (outerGroupInfo.index !== outerGroupInfo.group.content.length - 1) {
+                        return {
+                            groupId: outerGroupInfo.group.id,
+                            startOffset: outerGroupInfo.group.content.length,
+                            endOffset: outerGroupInfo.group.content.length
+                        };
+                    }
                 }
                 outerGroupInfo = kfEditor.requestService("position.get.parent.info", outerGroupInfo.group.groupObj);
             }
@@ -3171,11 +3188,7 @@ _p[35] = {
                         endOffset: 1
                     };
                 }
-                return {
-                    groupId: groupNode.id,
-                    startOffset: 0,
-                    endOffset: 0
-                };
+                return locateRightIndex(moveComponent, groupNode);
             }
             return {
                 groupId: outerGroupInfo.group.id,

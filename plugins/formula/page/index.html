@@ -99,6 +99,7 @@
                 } );
 
                 ckEditor.__kf_editor = kfEditor;
+                kfEditor.okFn = okFn;
 
             } );
 
@@ -127,14 +128,7 @@
 
             panel.appendTo( $( '.bottom-bar' )[0] );
 
-            okBtn.on( "click", function () {
-                var source = kfEditor.execCommand( "get.source" );
-                insertFormula( source );
-                ckEditor.clear();
-                kfEditor.execCommand( "reset" );
-                ckEditor.__kf_close();
-                cache = null;
-            } );
+            okBtn.on( "click", okFn );
 
             cancelBtn.on( "click", function () {
                 kfEditor.execCommand( "reset" );
@@ -142,6 +136,15 @@
                 ckEditor.__kf_close();
                 cache = null;
             } );
+
+            function okFn () {
+                var source = kfEditor.execCommand( "get.source" );
+                insertFormula( source );
+                ckEditor.clear();
+                kfEditor.execCommand( "reset" );
+                ckEditor.__kf_close();
+                cache = null;
+        }
 
         } );
 

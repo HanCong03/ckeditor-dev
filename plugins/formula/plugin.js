@@ -21,6 +21,20 @@
                     editor.openDialog( pluginName );
                 };
             } );
+            editor.on( "focus", function () {
+
+                if ( !editor.__open_state && !editor.__kf_editor ) {
+                    return;
+                }
+
+                var value = editor.__kf_editor.execCommand( "get.source" );
+
+                if ( !!value.trim() ) {
+                    editor.__kf_editor.okFn();
+                    editor.focus();
+                }
+
+            } );
 
             // Register the command.
             editor.addCommand( commandName, new CKEDITOR.command( editor, {
@@ -62,7 +76,9 @@
                         src += 'id=' + currentId + '&time=' + (+new Date());
                         editor.__kfEditorFrame.setAttribute( "src", src );
                         editor.__kfEditorFrame.show();
+                        editor.__open_state = true;
                     } else {
+                        editor.__open_state = false;
                         editor.__kfEditorFrame.hide();
                     }
 
@@ -100,6 +116,7 @@
 
             editor.__kf_close = function () {
                 editor.__kfEditorFrame.hide();
+                editor.__open_state = false;
             };
 
             // Register the toolbar button.
