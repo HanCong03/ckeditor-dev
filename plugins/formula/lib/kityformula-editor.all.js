@@ -1827,8 +1827,8 @@ _p[28] = {
                 this.latexArea.getContentElement().appendChild(this.latexInput);
                 this.scrollbarContainer = createScrollbarContainer(currentDocument);
                 this.toolbarWidget.appendTo(this.container);
-                this.latexArea.appendTo(this.editArea);
                 this.canvasContainer.appendTo(this.editArea);
+                this.latexArea.appendTo(this.editArea);
                 this.editArea.appendTo(this.container);
                 this.container.appendChild(this.scrollbarContainer);
                 this.canvasContainer = this.canvasContainer.getContentElement();
@@ -1848,7 +1848,7 @@ _p[28] = {
                 var containerBox = container.getBoundingClientRect(), toolbarBox = toolbar.getBoundingClientRect(), height = containerBox.bottom - toolbarBox.bottom;
                 editArea.style.width = containerBox.width + "px";
                 editArea.style.height = height + "px";
-                this.lastHeight = height - 100;
+                this.lastHeight = height;
                 this.minHeight = this.lastHeight;
                 this.canvasContainer.style.height = this.lastHeight + "px";
             },
@@ -1856,8 +1856,8 @@ _p[28] = {
                 var rootShape = this.kfEditor.requestService("syntax.get.root"), height = -1, shapeHeight = -1;
                 shapeHeight = rootShape.getRenderBox("paper").height;
                 if (shapeHeight < this.lastHeight) {
-                    height = this.minHeight + 100;
-                    if (shapeHeight + 100 < this.lastHeight) {
+                    height = this.minHeight;
+                    if (shapeHeight < this.lastHeight) {
                         height = this.lastHeight - Math.max(shapeHeight, this.minHeight);
                         height = Math.floor(height / 100);
                         if (height === 0) {
@@ -1872,7 +1872,7 @@ _p[28] = {
             updateHeight: function(diff) {
                 this.lastHeight += diff;
                 this.canvasContainer.style.height = this.lastHeight + "px";
-                this.editArea.style.height = this.lastHeight + 100 + "px";
+                this.editArea.style.height = this.lastHeight + "px";
                 this.container.style.height = $(this.container).height() + diff + "px";
                 this.notifyContainer(diff);
             },
@@ -1995,7 +1995,7 @@ _p[28] = {
             return container;
         }
         function creatLatexInput(doc) {
-            var container = doc.createElement("input");
+            var container = doc.createElement("textarea");
             container.className = "kf-editor-latex-input";
             return container;
         }

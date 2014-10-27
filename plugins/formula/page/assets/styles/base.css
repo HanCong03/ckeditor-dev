@@ -22,7 +22,8 @@
 }
 
 .kf-editor-ui-canvas {
-    width: 100%;
+    width: 59%;
+    border-right: 1px solid #dcdee0;
 }
 
 .fui-panel-content {
@@ -30,26 +31,25 @@
 }
 
 .kf-editor-ui-latex-area {
-    width: 100%;
-    margin: 0 auto;
-    height: 100px;
-    border-bottom: 1px solid #dcdee0;
+    width: 36%;
+    height: 96%;
+    padding: 2%;
 }
 
 .kf-editor-latex-input {
     border: 0;
-    text-align: center;
-    width: 90%;
+    width: 100%;
     height: 100%;
-    margin-left: 5%;
-    font-size: 18px;
+    font-size: 12px;
     outline: none;
     background: transparent;
+    padding: 0;
+    resize: none;
 }
 
 .kf-editor-input-box {
     position: fixed;
-    top: 500px;
+    top: 0;
     left: -99999999px;
     z-index: 999999;
 }
