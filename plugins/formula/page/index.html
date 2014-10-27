@@ -111,31 +111,31 @@
                 kfEditor.execCommand( 'focus' );
             };
 
-            var panel = new FUI.Panel( {
-                    className: 'kf-bottom-panel'
-                } ),
-                okBtn = new FUI.Button( {
-                    className: 'kf-ok-btn',
-                    label: '确定'
-                } ),
-                cancelBtn = new FUI.Button( {
-                    className: 'kf-cancel-btn',
-                    label: '取消'
-                } );
+//            var panel = new FUI.Panel( {
+//                    className: 'kf-bottom-panel'
+//                } ),
+//                okBtn = new FUI.Button( {
+//                    className: 'kf-ok-btn',
+//                    label: '确定'
+//                } ),
+//                cancelBtn = new FUI.Button( {
+//                    className: 'kf-cancel-btn',
+//                    label: '取消'
+//                } );
 
-            okBtn.appendTo( panel );
-            cancelBtn.appendTo( panel );
+//            okBtn.appendTo( panel );
+//            cancelBtn.appendTo( panel );
 
-            panel.appendTo( $( '.bottom-bar' )[0] );
+//            panel.appendTo( $( '.bottom-bar' )[0] );
 
-            okBtn.on( "click", okFn );
-
-            cancelBtn.on( "click", function () {
-                kfEditor.execCommand( "reset" );
-                ckEditor.clear();
-                ckEditor.__kf_close();
-                cache = null;
-            } );
+//            okBtn.on( "click", okFn );
+//
+//            cancelBtn.on( "click", function () {
+//                kfEditor.execCommand( "reset" );
+//                ckEditor.clear();
+//                ckEditor.__kf_close();
+//                cache = null;
+//            } );
 
             function okFn () {
                 var source = kfEditor.execCommand( "get.source" );
@@ -227,6 +227,5 @@
 </head>
 <body>
     <div id="eidotr" class="kf-editor" style="width: 100%; height: 300px;"></div>
-    <div class="bottom-bar"></div>
 </body>
 </html>

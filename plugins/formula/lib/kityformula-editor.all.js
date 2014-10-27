@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-10-26
+ * Kity Formula Editor - v1.0.0 - 2014-10-27
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -290,6 +290,12 @@ _p[7] = {
             ENTER: 13,
             // 输入法特殊处理
             INPUT: 229
+        }, CHARS = {
+            "，": ",",
+            "。": ".",
+            "；": ";",
+            "）": ")",
+            "（": "("
         };
         return kity.createClass("InputComponent", {
             constructor: function(parentComponent, kfEditor) {
@@ -536,7 +542,7 @@ _p[7] = {
                 }
             },
             newLine: function() {
-                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin[\s\S]*?\\end/gi, pattern = /\\begin\{([^}]+)\}[\s\S]*?\\end\{\1\}/gi, rootShape = null, beginType = null, content = null, originString = latexInfo.str;
+                var latexInfo = this.kfEditor.requestService("syntax.serialization"), match = null, source = null, index = 0, pattern = /\\begin\{([^}]+)\}[\s\S]*?\\end\{\1\}/gi, rootShape = null, beginType = null, content = null, originString = latexInfo.str;
                 while (match = pattern.exec(originString)) {
                     index = match.index;
                     beginType = match[1];
@@ -556,18 +562,24 @@ _p[7] = {
                 source = source.split("\\\\");
                 for (var i = 0, len = source.length; i < len; i++) {
                     if (source[i].indexOf(CURSOR_CHAR) !== -1) {
-                        content = source[i];
-                        source[i] = source[i].replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
-                        content = content.split("&");
-                        for (var j = 0, jlen = content.length; j < jlen; j++) {
-                            if (content[j].indexOf(CURSOR_CHAR) !== -1) {
-                                content[j] = CURSOR_CHAR + " \\placeholder " + CURSOR_CHAR;
-                            } else {
-                                content[j] = "\\placeholder";
+                        if (beginType === "split") {
+                            source[i] = source[i].replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
+                            source.splice(i + 1, 0, "&{" + CURSOR_CHAR + " \\placeholder " + CURSOR_CHAR + "}");
+                            break;
+                        } else {
+                            content = source[i];
+                            source[i] = source[i].replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
+                            content = content.split("&");
+                            for (var j = 0, jlen = content.length; j < jlen; j++) {
+                                if (content[j].indexOf(CURSOR_CHAR) !== -1) {
+                                    content[j] = CURSOR_CHAR + " \\placeholder " + CURSOR_CHAR;
+                                } else {
+                                    content[j] = "\\placeholder";
+                                }
                             }
+                            source.splice(i + 1, 0, content.join("&"));
+                            break;
                         }
-                        source.splice(i + 1, 0, content.join("&"));
-                        break;
                     }
                 }
                 source = "\\begin{" + beginType + "}" + source.join("\\\\") + "\\end{" + beginType + "}";
@@ -604,8 +616,11 @@ _p[7] = {
                 return (e.shiftKey ? "s+" : "") + e.keyCode;
             },
             processingInput: function() {
-                this.restruct(this.inputBox.value);
-                this.latexInput.value = this.inputBox.value.replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
+                var value = this.inputBox.value.replace(/[，。；（）]/g, function(match) {
+                    return CHARS[match];
+                });
+                this.restruct(value);
+                this.latexInput.value = value.replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
                 this.kfEditor.requestService("ui.update.canvas.view");
             },
             // 根据给定的字符串重新进行构造公式
