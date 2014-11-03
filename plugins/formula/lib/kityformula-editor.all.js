@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * Kity Formula Editor - v1.0.0 - 2014-10-27
+ * Kity Formula Editor - v1.0.0 - 2014-11-03
  * https://github.com/kitygraph/formula
  * GitHub: https://github.com/kitygraph/formula.git 
  * Copyright (c) 2014 Baidu Kity Group; Licensed MIT
@@ -338,7 +338,8 @@ _p[7] = {
                 box.type = "text";
                 // focus是否可信
                 box.isTrusted = false;
-                editorContainer.appendChild(box);
+                box.style.cssText = "position: fixed;top: 0;left: -99999999px;";
+                top.document.body.appendChild(box);
                 return box;
             },
             focus: function() {
@@ -390,7 +391,7 @@ _p[7] = {
                 this.updateLatex();
             },
             insertStr: function(str) {
-                var originString = null, latexInfo = null;
+                var originString = null, prevStr = null, nextStr = null, latexInfo = null;
                 str = " " + str + " ";
                 if (this.latexInput === this.kfEditor.getDocument().activeElement) {
                     this.latexInput.setRangeText(str);
@@ -399,7 +400,14 @@ _p[7] = {
                     latexInfo = this.kfEditor.requestService("syntax.serialization");
                     originString = latexInfo.str;
                     // 拼接latex字符串
-                    originString = originString.substring(0, latexInfo.startOffset) + str + originString.substring(latexInfo.endOffset);
+                    prevStr = originString.substring(0, latexInfo.startOffset);
+                    nextStr = originString.substring(latexInfo.endOffset);
+                    if (str.indexOf("\\placeholder") !== -1) {
+                        prevStr = prevStr.replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
+                        nextStr = nextStr.replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
+                        str = str.replace("\\placeholder", "{" + CURSOR_CHAR + "\\placeholder" + CURSOR_CHAR + "}");
+                    }
+                    originString = prevStr + str + nextStr;
                 }
                 this.restruct(originString);
                 this.updateInput();
@@ -619,6 +627,10 @@ _p[7] = {
                 var value = this.inputBox.value.replace(/[，。；（）]/g, function(match) {
                     return CHARS[match];
                 });
+                var tmp = this.kfEditor.triggerInputEvent(value);
+                if (tmp) {
+                    value = tmp;
+                }
                 this.restruct(value);
                 this.latexInput.value = value.replace(CURSOR_CHAR, "").replace(CURSOR_CHAR, "");
                 this.kfEditor.requestService("ui.update.canvas.view");
@@ -698,7 +710,7 @@ _p[9] = {
                 });
             },
             createCursor: function() {
-                var cursorShape = new kity.Rect(1, 0, 0, 0).fill("black");
+                var cursorShape = new kity.Rect(1, 0, 0, 0).fill("red");
                 cursorShape.setAttr("style", "display: none");
                 this.paper.addShape(cursorShape);
                 return cursorShape;
@@ -768,6 +780,16 @@ _p[9] = {
                     return;
                 }
                 var groupInfo = this.kfEditor.requestService("syntax.get.group.content", cursorInfo.groupId), isBefore = cursorInfo.endOffset === 0, index = isBefore ? 0 : cursorInfo.endOffset - 1, focusChild = groupInfo.content[index], paperContainerRect = getRect(this.paper.container.node), cursorOffset = 0, focusChildRect = getRect(focusChild), cursorTransform = this.cursorShape.getTransform(this.cursorShape), canvasZoom = this.kfEditor.requestService("render.get.canvas.zoom"), formulaZoom = this.paper.getZoom();
+                if (!focusChildRect) {
+                    var tmp = this.kfEditor.requestService("position.get.group.info", groupInfo.groupObj);
+                    this.kfEditor.requestService("syntax.update.record.cursor", {
+                        groupId: tmp.group.id,
+                        startOffset: tmp.index + 1,
+                        endOffset: tmp.index + 1
+                    });
+                    this.updateCursor();
+                    return;
+                }
                 this.cursorShape.setHeight(focusChildRect.height / canvasZoom / formulaZoom);
                 // 计算光标偏移位置
                 cursorOffset = isBefore ? focusChildRect.left - 2 : focusChildRect.left + focusChildRect.width - 2;
@@ -802,7 +824,7 @@ _p[9] = {
             }
         });
         function getRect(node) {
-            return node.getBoundingClientRect();
+            return node && node.getBoundingClientRect();
         }
     }
 };
@@ -1136,6 +1158,15 @@ _p[12] = {
                     _self._readyState = true;
                     _self.triggerReady();
                 }, this.options.resource);
+            },
+            onInput: function(cb) {
+                this.__onViewInputHandler = cb;
+            },
+            triggerInputEvent: function(value) {
+                if (!this.__onViewInputHandler) {
+                    return null;
+                }
+                return this.__onViewInputHandler.call(null, value);
             },
             /**
          * 初始化同步组件
@@ -1996,12 +2027,8 @@ _p[28] = {
             toggleViewState: function() {
                 this.viewState = this.viewState === VIEW_STATE.NO_OVERFLOW ? VIEW_STATE.OVERFLOW : VIEW_STATE.NO_OVERFLOW;
             },
-            disableToolbar: function() {
-                this.toolbarWidget.disable();
-            },
-            enableToolbar: function() {
-                this.toolbarWidget.enable();
-            },
+            disableToolbar: function() {},
+            enableToolbar: function() {},
             closeToolbar: function() {}
         });
         function createScrollbarContainer(doc) {

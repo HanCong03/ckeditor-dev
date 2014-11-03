@@ -92,6 +92,12 @@
                 this.execCommand( "render", source );
                 this.execCommand( "focus" );
 
+                this.onInput( function ( val ) {
+                    val = val.replace( /(?!\\)sin/g, '\\sin ');
+                    console.log( val )
+                    return val;
+                } );
+
                 kfEditor = this;
 
                 kfEditor.execCommand( 'resize.notify', function ( height ) {

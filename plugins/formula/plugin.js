@@ -21,6 +21,7 @@
                     editor.openDialog( pluginName );
                 };
             } );
+
             editor.on( "focus", function () {
 
                 if ( !editor.__open_state && !editor.__kf_editor ) {
